@@ -1,23 +1,7 @@
-{
+test: {
     a: 'hello', 
     b: 'world', 
     c: 1337, 
     t: true, 
     f: false
 }
-
-
-sdf: 34
-
-:34
-
-+(23 23)
-+(23 +(23 23))
--(23 :+(23 23))
-
-my.lib.cool: { sdf: '2332' }
-
-math.pow
-^(2 5)
-
-splitted-variable-name: 34
