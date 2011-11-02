@@ -8,6 +8,16 @@ function build(code, parent) {
     if (i1 >= 0 || i2 >= 0) {
         if (i2 < 0 || i1 < i2) {
             m = code.slice(0, i1).trim();
+            if ((l = m.split('.')).length > 0) {
+                for (i = 0; i < l.length - 1; i++) {
+                    r = l[i];
+                    if (!parent[r]) {
+                        parent[r] = {};
+                    }
+                    parent = parent[r];
+                }
+                m = l[l.length - 1];
+            }
             if (m.match(/\[.*\]/)) {
                 i = m.indexOf('[');
                 r = m.slice(i + 1, m.indexOf(']')).split(' ');
