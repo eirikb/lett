@@ -1,7 +1,10 @@
-test: {
+my.test-lib: {
     a: 'hello', 
     b: 'world', 
     c: 1337, 
     t: true, 
-    f: false
+    f: false,
+    inner-object: 7,
+    very.inner-object: 'Works!',
+    calling-test: +(1 2 3)
 }

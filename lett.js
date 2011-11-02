@@ -33,9 +33,13 @@ function assign(b) {
     return b;
 }
 
-exports.run = function(code) {
+var letteval = function(code) {
     var a = {},
     b = build(code, a);
     return Object.keys(a).length > 0 ? a: b;
 };
+
+if (typeof exports !== 'undefined') {
+    exports.letteval = letteval;
+}
 
