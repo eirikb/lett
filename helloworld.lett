@@ -7,7 +7,7 @@ my.test-lib: {
     inner-object: 7,
     very.inner-object: 'Works!',
     nesting-test: +(1 2 3 -(6 1)),
-    string-test: str('hello' '...' 'world'),
-    add[a b]: +(a b),
-    test-add: add(30 12)
+    string-test: str('hello' ', ' 'world'),
+    test-fn.add[a b]: +(a b),
+    test-add: my.test-lib.test-fn.add(30 12)
 }
