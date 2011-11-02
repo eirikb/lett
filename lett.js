@@ -25,7 +25,7 @@ function assign(b) {
         b = true;
     } else if (b.match(/false/i)) {
         b = false;
-    } else if (b.match(/.*(.*)$/ig)) {
+    } else if (b.match(/.*\(.*\).*/ig)) {
         b = 'EXEC(' + b + ')';
     } else {
         b = parseInt(b, 10);
