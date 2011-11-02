@@ -19,6 +19,8 @@ function build(code, parent) {
 }
 
 function assign(b) {
+    var i, m;
+
     if (b.match(/^('|").*('|")$/)) {
         b = b.slice(1, b.length - 1);
     } else if (b.match(/true/i)) {
@@ -26,7 +28,12 @@ function assign(b) {
     } else if (b.match(/false/i)) {
         b = false;
     } else if (b.match(/.*\(.*\).*/ig)) {
-        b = 'EXEC(' + b + ')';
+        i = b.indexOf('(');
+        m = b.slice(0, i);
+        b = b.slice(i + 1, b.indexOf(')'));
+        if (lettlib[m]) {
+            b = lettlib[m].apply(this, b.split(' '));
+        }
     } else {
         b = parseInt(b, 10);
     }
@@ -41,5 +48,6 @@ var letteval = function(code) {
 
 if (typeof exports !== 'undefined') {
     exports.letteval = letteval;
+    lettlib = require('./lib.js');
 }
 
