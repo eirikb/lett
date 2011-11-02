@@ -1,7 +1,11 @@
 lett
 -
 
-"lett" stands for Lett Is Not a Language
+"lett" stands for Lett Is Not a Language  
+  
+It's another hipster language, except that it is 
+interpreted with JS, so it is probably ultraslow and horrible.  
+Not to be confused with CoffeeScript, it's not the same in any way.
 
 Run example
 --
