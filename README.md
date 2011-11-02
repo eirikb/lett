@@ -3,6 +3,11 @@ lett
 
 "lett" stands for Lett Is Not a Language
 
+Run example
+--
+
+   node example/test.js example/helloworld.lett
+
 Example
 --
 
