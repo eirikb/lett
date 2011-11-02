@@ -1,19 +1,37 @@
-var lettlib = require('./lib.js');
+var lettlib = require('./lib.js'),
+father = {};
 
 function build(code, parent) {
-    var i, s, l, r, i1 = code.indexOf(':'),
+    var i, s, l, r, m, i, i1 = code.indexOf(':'),
     i2 = code.indexOf('{');
 
     if (i1 >= 0 || i2 >= 0) {
         if (i2 < 0 || i1 < i2) {
-            parent[code.slice(0, i1).trim()]  = build(code.slice(i1 + 1));
+            m = code.slice(0, i1).trim();
+            if (m.match(/\[.*\]/)) {
+                i = m.indexOf('[');
+                r = m.slice(i + 1, m.indexOf(']')).split(' ');
+                m = m.slice(0, i);
+                parent[m] = function() {
+                    var i, s = '';
+                    for (i = 0; i < arguments.length; i++) {
+                        s += arguments[i];
+                    }
+                    return exec(s);
+                }
+            } else {
+                parent[m] = build(code.slice(i1 + 1));
+            }
         } else {
-            var o = {};
+            parent = {};
+            if (Object.keys(father).length === 0) {
+                father = parent;
+            }
             code.slice(code.indexOf('{') + 1, code.indexOf('}')).
             split(',').forEach(function(c) {
-                build(c, o);
+                build(c, parent);
             });
-            return o;
+            return parent;
         }
     } else {
         return assign(code.trim());
@@ -35,17 +53,17 @@ function assign(b) {
     return b;
 }
 
-function exec(b) {
-    var i, m, t, a = [];
-    i = b.indexOf('(');
+function exec(b, parent) {
+    var i, m, t, i = b.indexOf('(');
     m = b.slice(0, i);
-    b = b.slice(i + 1, b.lastIndexOf(')'));
-    if (lettlib[m]) {
+    b = b.slice(i + 1, b.lastIndexOf(')')),
+    ready = function(b) {
+        var a = [];
         while (b.length > 0) {
             i = b.indexOf(' ');
             if (i >= 0) {
-            t = b.slice(0, i);
-            b = b.slice(i + 1);
+                t = b.slice(0, i);
+                b = b.slice(i + 1);
             } else {
                 t = b;
                 b = '';
@@ -57,15 +75,19 @@ function exec(b) {
             }
             a.push(assign(t));
         }
+        return a;
+    };
 
-        b = lettlib[m].apply(this, a);
+    if (lettlib[m]) {
+        b = lettlib[m].apply(this, ready(b));
+    } else if (father[m]) {
+        father[m].apply(this, ready(b));
     }
     return b;
 }
 
 exports.letteval = function(code) {
-    var a = {},
-    b = build(code, a);
-    return Object.keys(a).length > 0 ? a: b;
+    b = build(code, father);
+    return Object.keys(father).length > 0 ? father: b;
 };
 

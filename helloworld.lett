@@ -8,5 +8,6 @@ my.test-lib: {
     very.inner-object: 'Works!',
     nesting-test: +(1 2 3 -(6 1)),
     string-test: str('hello' '...' 'world'),
-    my-first-fn.add[a b]: +(a b)
+    add[a b]: +(a b),
+    test-add: add(30 12)
 }
