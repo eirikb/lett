@@ -39,13 +39,21 @@ function exec(b) {
     var i, m, t, a = [];
     i = b.indexOf('(');
     m = b.slice(0, i);
-    b = b.slice(i + 1, b.indexOf(')') + 1);
+    b = b.slice(i + 1, b.lastIndexOf(')'));
     if (lettlib[m]) {
-        while ((i = b.indexOf(' ')) >= 0) {
+        while (b.length > 0) {
+            i = b.indexOf(' ');
+            if (i >= 0) {
             t = b.slice(0, i);
             b = b.slice(i + 1);
+            } else {
+                t = b;
+                b = '';
+            }
             if (t.match(/\(/) && b.match(/\)/)) {
-                t += ' ' + b.slice(0, b.indexOf(')'));
+                i = b.indexOf(')') + 1;
+                t += ' ' + b.slice(0, i);
+                b = b.slice(i);
             }
             a.push(assign(t));
         }
