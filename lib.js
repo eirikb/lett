@@ -29,6 +29,13 @@ var lettlib = {
             n *= parseInt(arguments[i], 10);
         }
         return n;
+    },
+    str: function() {
+        var i, s = '';
+        for (i = 0; i < arguments.length; i++) {
+            s += arguments[i];
+        }
+        return s;
     }
 
 };
