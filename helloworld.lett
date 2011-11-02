@@ -6,5 +6,5 @@ my.test-lib: {
     f: false,
     inner-object: 7,
     very.inner-object: 'Works!',
-    calling-test: +(1 2 3)
+    calling-test: +(1 2 3 -(6 1))
 }

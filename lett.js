@@ -21,7 +21,6 @@ function build(code, parent) {
 }
 
 function assign(b) {
-
     if (b.match(/^('|").*('|")$/)) {
         b = b.slice(1, b.length - 1);
     } else if (b.match(/true/i)) {
@@ -37,12 +36,21 @@ function assign(b) {
 }
 
 function exec(b) {
-    var i, m;
+    var i, m, t, a = [];
     i = b.indexOf('(');
     m = b.slice(0, i);
-    b = b.slice(i + 1, b.indexOf(')'));
+    b = b.slice(i + 1, b.indexOf(')') + 1);
     if (lettlib[m]) {
-        b = lettlib[m].apply(this, b.split(' '));
+        while ((i = b.indexOf(' ')) >= 0) {
+            t = b.slice(0, i);
+            b = b.slice(i + 1);
+            if (t.match(/\(/) && b.match(/\)/)) {
+                t += ' ' + b.slice(0, b.indexOf(')'));
+            }
+            a.push(assign(t));
+        }
+
+        b = lettlib[m].apply(this, a);
     }
     return b;
 }
