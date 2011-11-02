@@ -1,3 +1,5 @@
+var lettlib = require('./lib.js');
+
 function build(code, parent) {
     var i, s, l, r, i1 = code.indexOf(':'),
     i2 = code.indexOf('{');
@@ -40,14 +42,9 @@ function assign(b) {
     return b;
 }
 
-var letteval = function(code) {
+exports.letteval = function(code) {
     var a = {},
     b = build(code, a);
     return Object.keys(a).length > 0 ? a: b;
 };
-
-if (typeof exports !== 'undefined') {
-    exports.letteval = letteval;
-    lettlib = require('./lib.js');
-}
 

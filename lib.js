@@ -33,9 +33,7 @@ var lettlib = {
 
 };
 
-if (typeof exports !== 'undefined') {
-    Object.keys(lettlib).forEach(function(key) {
-        exports[key] = lettlib[key];
-    });
-}
+Object.keys(lettlib).forEach(function(key) {
+    exports[key] = lettlib[key];
+});
 
