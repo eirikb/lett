@@ -1,51 +1,75 @@
-var lettlib = require('./lib.js'),
-father = {};
+var lettlib = require('./lib.js');
 
-function build(code, parent) {
-    var i, s, l, r, m, i, i1 = code.indexOf(':'),
-    i2 = code.indexOf('{');
+function build(code) {
+    var o = {};
 
-    if (i1 >= 0 || i2 >= 0) {
-        if (i2 < 0 || i1 < i2) {
-            m = code.slice(0, i1).trim();
-            if ((l = m.split('.')).length > 0) {
-                for (i = 0; i < l.length - 1; i++) {
-                    r = l[i];
-                    if (!parent[r]) {
-                        parent[r] = {};
-                    }
-                    parent = parent[r];
-                }
-                m = l[l.length - 1];
-            }
-            if (m.match(/\[.*\]/)) {
-                i = m.indexOf('[');
-                r = m.slice(i + 1, m.indexOf(']')).split(' ');
-                m = m.slice(0, i);
-                parent[m] = function() {
-                    var i, s = '';
-                    for (i = 0; i < arguments.length; i++) {
-                        s += arguments[i];
-                    }
-                    return exec(s);
-                }
-            } else {
-                parent[m] = build(code.slice(i1 + 1));
-            }
+    while (code.length > 0) {
+        var clips, sides = splitFirst(code, [':', '{']),
+        result = sides[sides.length - 1],
+        current = sides.length > 1 ? path(sides[0].split('.'), o) : {};
+
+        clips = clip(result, ['{', '}']);
+        console.log(clips);
+        if (clips) {
+            current = result.slice(clips[0] + 1, clips[1]);
+            code = result.slice(clips[1] + 1).trim();
+            console.log(code);
+            code = '';
         } else {
-            parent = {};
-            if (Object.keys(father).length === 0) {
-                father = parent;
-            }
-            code.slice(code.indexOf('{') + 1, code.indexOf('}')).
-            split(',').forEach(function(c) {
-                build(c, parent);
-            });
-            return parent;
+            current = result;
+            code = '';
         }
-    } else {
-        return assign(code.trim());
     }
+    console.log(o)
+}
+
+function path(path, parent) {
+    path.forEach(function(name) {
+        if (typeof parent[name] === 'object') {
+            parent = parent[name];
+        } else {
+            parent = parent[name] = {};
+        }
+    });
+    return parent;
+}
+
+function splitFirst(code, splits) {
+    var min;
+    indexOfAll(code, splits).forEach(function(i) {
+        if (i >= 0 && (!min || i < min)) {
+            min = i;
+        }
+    });
+    return [code.slice(0, min), code.slice(min + 1)].filter(function(s) {
+        s = s.trim();
+        return s.length > 0 ? s: false;
+    });
+}
+
+function indexOfAll(code, targets) {
+    var c, i, imsy = false, indexes = [],
+    outside = ["'", '"'];
+
+    for (i = 0; i < code.length; i++) {
+        c = code.charAt(i);
+        if (outside.indexOf(c) >= 0) {
+            imsy = imsy ? false: c;
+        } else if (!imsy) {
+            if (targets.indexOf(c) >= 0) {
+                indexes.push(i);
+            }
+        }
+    }
+    return indexes;
+}
+
+function clip(code, targets) {
+    var level = 0;
+    return indexOfAll(code, targets).filter(function(i, j) {
+        level += code.charAt(i) === '{' ? 1 : -1;
+        return j === 0 || level === 0;
+    });
 }
 
 function assign(b) {
@@ -97,7 +121,9 @@ function exec(b, parent) {
 }
 
 exports.letteval = function(code) {
-    b = build(code, father);
-    return Object.keys(father).length > 0 ? father: b;
+    // TODO: Remove, simple fix for comments
+    code = code.replace(/;.*\n/g, '');
+
+    return build(code);
 };
 
