@@ -1,9 +1,9 @@
 var fs = require('fs'),
-sys = require('sys');
+util = require('util');
 
 var lett = require('../lett.js');
 
 fs.readFile(process.argv[2], function(e, d) {
-    console.log(sys.inspect(lett.letteval(d.toString()), true, null));
+    console.log(util.inspect(lett.letteval(d.toString()), true, null));
 });
 
