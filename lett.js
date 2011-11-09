@@ -1,33 +1,84 @@
 var lettlib = require('./lib.js');
 
-function build(code, level) {
-    var o = {};
-
-    while (code.length > 0) {
-        var clips, lines, name, urrent, sides = splitFirst(code, [':', '{']),
-        result = sides[sides.length - 1];
-
-        if (sides) {
-            clips = clip(result, ['{', '}']);
-            if (clips.length > 0) {
-                code = result.slice(clips[1] + 1).trim();
-                result = result.slice(clips[0] + 1, clips[1]);
-            } else {
-                lines = splitFirst(result, '\n');
-                if (lines.length > 1) {
-                    result = lines[0].trim();
-                    code = lines[1];
-                } else {
-                    result = sides[1];
-                    code = '';
-                }
-            }
-            ass(sides[0].replace(/\n/g, '').trim(), o, result);
-        } else {
-            return assign(code.trim());
-        }
+function build() {;
+    [
+   /* {
+        s: 'hello world',
+        e: false
+    },
+    {
+        s: 'omg { haha }',
+        e: [4, 11]
+    },
+    {
+        s: ' This " is a { real test }',
+        e: false
+    },
+    {
+        s: "for ' bosses {' and { girls }",
+        e: [20, 28]
+    },
+    {
+        s: ' and "\n bosses { of " { this { is { the } test! } }',
+        e: [22, 50]
+    },
+    {
+        s: 'gi"girl{s',
+        e: false
+        */
+    {
+        s: 'gi"girl"{"{"{s}}',
+        e: [8, 15]
     }
-    return o;
+    ].forEach(function(c) {
+        //var i = clip(c.s, /{/, /}/),
+        s = c.s.replace(/\n/, '');
+    console.log(safeIndexOf(s, /{/))
+    /*
+        if (i === false || (Array.isArray(i) && c.e[0] === i[0] && c.e[1] === i[1])) {
+            console.log('OK! ', s, '\t\t', i, '===', c.e);
+        } else {
+            console.log('ERROR! ', s, '\t\t', i, '!==', c.e);
+        }
+        */
+    });
+}
+
+function clip(code, regexFrom, regexTo) {
+    console.log('clip', code)
+    var start = safeIndexOf(code, regexFrom),
+        pos = start + 1, i1, i2,
+        count = start >= 0 ? 1 : -1;
+
+    while (count > 0 && pos > 0) {
+        i1 = safeIndexOf(code, regexFrom, pos);
+        i2 = safeIndexOf(code, regexTo, pos);
+        pos = Math.max(i1, i2) + 1;
+        count += (i1 >= 0) && i1 < i2 ? 1 : -1;
+        //console.log(i1, i2, pos, count)
+    }
+    pos--;
+    if (start >= 0 && pos > 0) {
+        return [start, pos];
+    } else {
+        return false;
+    }
+}
+
+function safeIndexOf(code, regex, start) {
+    i = regexIndexOf(code, /'|"/, start);
+    console.log(start, i);
+    if (i >= 0) {
+        start = regexIndexOf(code, new RegExp(code.charAt(i)), i + 1);
+        console.log('start', start)
+        return start >= 0 ? safeIndexOf(code, regex, start + 1) : - 1;
+    }
+    return regexIndexOf(code, regex, start);
+}
+
+function regexIndexOf(code, regex, startpos) {
+    var indexOf = code.substring(startpos || 0).search(regex);
+    return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
 }
 
 function ass(path, parent, obj) {
@@ -42,49 +93,6 @@ function ass(path, parent, obj) {
         } else {
             parent[name] = build(obj);
         }
-    });
-}
-
-function splitFirst(code, splits) {
-    var min;
-    indexOfAll(code, splits).forEach(function(i) {
-        if (i >= 0 && (!min || i < min)) {
-            min = i;
-        }
-    });
-    if (min) {
-        return [code.slice(0, min), code.slice(min + 1)].filter(function(s) {
-            s = s.trim();
-            return s.length > 0 ? s: false;
-        });
-    } else {
-        return false;
-    }
-}
-
-function indexOfAll(code, targets) {
-    var c, i, imsy = false,
-    indexes = [],
-    outside = ["'", '"'];
-
-    for (i = 0; i < code.length; i++) {
-        c = code.charAt(i);
-        if (outside.indexOf(c) >= 0) {
-            imsy = imsy ? false: c;
-        } else if (!imsy) {
-            if (targets.indexOf(c) >= 0) {
-                indexes.push(i);
-            }
-        }
-    }
-    return indexes;
-}
-
-function clip(code, targets) {
-    var level = 0;
-    return indexOfAll(code, targets).filter(function(i, j) {
-        level += code.charAt(i) === '{' ? 1: - 1;
-        return j === 0 || level === 0;
     });
 }
 
