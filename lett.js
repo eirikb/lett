@@ -2,7 +2,7 @@ var lettlib = require('./lib.js');
 
 function build() {;
     [
-   /* {
+{
         s: 'hello world',
         e: false
     },
@@ -25,60 +25,50 @@ function build() {;
     {
         s: 'gi"girl{s',
         e: false
-        */
+    },
     {
         s: 'gi"girl"{"{"{s}}',
         e: [8, 15]
-    }
-    ].forEach(function(c) {
-        //var i = clip(c.s, /{/, /}/),
+    }].forEach(function(c) {
+        var i = clip(c.s, /{/, /}/),
         s = c.s.replace(/\n/, '');
-    console.log(safeIndexOf(s, /{/))
-    /*
         if (i === false || (Array.isArray(i) && c.e[0] === i[0] && c.e[1] === i[1])) {
             console.log('OK! ', s, '\t\t', i, '===', c.e);
         } else {
             console.log('ERROR! ', s, '\t\t', i, '!==', c.e);
         }
-        */
     });
 }
 
 function clip(code, regexFrom, regexTo) {
-    console.log('clip', code)
-    var start = safeIndexOf(code, regexFrom),
-        pos = start + 1, i1, i2,
-        count = start >= 0 ? 1 : -1;
+    var i1, i2, start = safeIndexOf(code, ['{']),
+    pos = start + 1,
+    count = start >= 0 ? 1: - 1;
 
     while (count > 0 && pos > 0) {
-        i1 = safeIndexOf(code, regexFrom, pos);
-        i2 = safeIndexOf(code, regexTo, pos);
+        i1 = safeIndexOf(code, ['{'], pos);
+        i2 = safeIndexOf(code, ['}'], pos);
         pos = Math.max(i1, i2) + 1;
-        count += (i1 >= 0) && i1 < i2 ? 1 : -1;
-        //console.log(i1, i2, pos, count)
+        count += (i1 >= 0) && i1 < i2 ? 1: - 1;
     }
     pos--;
-    if (start >= 0 && pos > 0) {
-        return [start, pos];
-    } else {
-        return false;
-    }
+    return start >= 0 && pos > 0 ? [start, pos] : false;
 }
 
-function safeIndexOf(code, regex, start) {
-    i = regexIndexOf(code, /'|"/, start);
-    console.log(start, i);
-    if (i >= 0) {
-        start = regexIndexOf(code, new RegExp(code.charAt(i)), i + 1);
-        console.log('start', start)
-        return start >= 0 ? safeIndexOf(code, regex, start + 1) : - 1;
-    }
-    return regexIndexOf(code, regex, start);
-}
+function safeIndexOf(code, targets, start) {
+    var c, i, imsy = false,
+    outside = ["'", '"'];
 
-function regexIndexOf(code, regex, startpos) {
-    var indexOf = code.substring(startpos || 0).search(regex);
-    return (indexOf >= 0) ? (indexOf + (startpos || 0)) : indexOf;
+    for (i = start || 0; i < code.length; i++) {
+        c = code.charAt(i);
+        if (outside.indexOf(c) >= 0) {
+            imsy = imsy ? false: c;
+        } else if (!imsy) {
+            if (targets.indexOf(c) >= 0) {
+                return i;
+            }
+        }
+    }
 }
 
 function ass(path, parent, obj) {
