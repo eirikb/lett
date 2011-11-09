@@ -30,7 +30,7 @@ function build() {;
         s: 'gi"girl"{"{"{s}}',
         e: [8, 15]
     }].forEach(function(c) {
-        var i = clip(c.s, /{/, /}/),
+        var i = clip(c.s, '{', '}'),
         s = c.s.replace(/\n/, '');
         if (i === false || (Array.isArray(i) && c.e[0] === i[0] && c.e[1] === i[1])) {
             console.log('OK! ', s, '\t\t', i, '===', c.e);
@@ -40,18 +40,15 @@ function build() {;
     });
 }
 
-function clip(code, regexFrom, regexTo) {
-    var i1, i2, start = safeIndexOf(code, ['{']),
-    pos = start + 1,
+function clip(code, from, to) {
+    var start = safeIndexOf(code, [from]),
+    pos = start,
     count = start >= 0 ? 1: - 1;
 
     while (count > 0 && pos > 0) {
-        i1 = safeIndexOf(code, ['{'], pos);
-        i2 = safeIndexOf(code, ['}'], pos);
-        pos = Math.max(i1, i2) + 1;
-        count += (i1 >= 0) && i1 < i2 ? 1: - 1;
+        pos = safeIndexOf(code, [from, to], pos + 1);
+        count += code.charAt(pos) === from ? 1 : -1;
     }
-    pos--;
     return start >= 0 && pos > 0 ? [start, pos] : false;
 }
 
@@ -69,6 +66,7 @@ function safeIndexOf(code, targets, start) {
             }
         }
     }
+    return -1;
 }
 
 function ass(path, parent, obj) {
