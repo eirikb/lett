@@ -1,53 +1,51 @@
 var lettlib = require('./lib.js');
 
-function build() {;
-    [
-{
-        s: 'hello world',
-        e: false
-    },
-    {
-        s: 'omg { haha }',
-        e: [4, 11]
-    },
-    {
-        s: ' This " is a { real test }',
-        e: false
-    },
-    {
-        s: "for ' bosses {' and { girls }",
-        e: [20, 28]
-    },
-    {
-        s: ' and "\n bosses { of " { this { is { the } test! } }',
-        e: [22, 50]
-    },
-    {
-        s: 'gi"girl{s',
-        e: false
-    },
-    {
-        s: 'gi"girl"{"{"{s}}',
-        e: [8, 15]
-    }].forEach(function(c) {
-        var i = clip(c.s, '{', '}'),
-        s = c.s.replace(/\n/, '');
-        if (i === false || (Array.isArray(i) && c.e[0] === i[0] && c.e[1] === i[1])) {
-            console.log('OK! ', s, '\t\t', i, '===', c.e);
+function build(code) {
+    var c, last, i = 0,
+    o = {},
+    left = '',
+    part = '';
+
+    while (i >= 0 && i < code.length) {
+        last = i;
+        i = safeIndexOf(code, [':', '\n', '{'], i + 1);
+        c = code.charAt(i);
+
+        if (c === ':') {
+            left = code.slice(last, i).trim();
+        } else if (c === '{') {
+            part = clip(code, '{', '}', i);
+            if (part) {
+                i = part[1] + 1;
+                part = code.slice(part[0] + 1, part[1]).trim();
+                part = build(part);
+                i++;
+            }
         } else {
-            console.log('ERROR! ', s, '\t\t', i, '!==', c.e);
+            if (i < 0) i = code.length;
+            part = code.slice(last, i).trim();
         }
-    });
+        if (part) {
+            if (left) {
+                assignSides(left, o, part);
+                left = part = false;
+            } else {
+                return part;
+            }
+        }
+    }
+
+    return o;
 }
 
-function clip(code, from, to) {
-    var start = safeIndexOf(code, [from]),
+function clip(code, from, to, start) {
+    var start = safeIndexOf(code, [from], start),
     pos = start,
     count = start >= 0 ? 1: - 1;
 
     while (count > 0 && pos > 0) {
         pos = safeIndexOf(code, [from, to], pos + 1);
-        count += code.charAt(pos) === from ? 1 : -1;
+        count += code.charAt(pos) === from ? 1: - 1;
     }
     return start >= 0 && pos > 0 ? [start, pos] : false;
 }
@@ -66,22 +64,24 @@ function safeIndexOf(code, targets, start) {
             }
         }
     }
-    return -1;
+    return - 1;
 }
 
-function ass(path, parent, obj) {
+function assignSides(path, parent, obj) {
     var paths = path.split('.');
-    paths.forEach(function(name, i) {
-        if (i < paths.length - 1) {
-            if (typeof parent[name] === 'object') {
-                parent = parent[name];
-            } else {
-                parent = parent[name] = {};
-            }
-        } else {
-            parent[name] = build(obj);
-        }
+
+    paths.slice(0, paths.length - 1).forEach(function(name) {
+        parent = parent[name] = {};
     });
+
+    path = paths.slice(paths.length - 1)[0];
+
+    if (typeof obj === 'object') {
+        parent[path] = obj;
+    } else {
+        obj = obj.replace(/^\:/, '').trim();
+        parent[path] = assign(obj);
+    }
 }
 
 function assign(b) {
@@ -124,11 +124,13 @@ function exec(b, parent) {
         return a;
     };
 
+    /*
     if (lettlib[m]) {
         b = lettlib[m].apply(this, ready(b));
     } else if (father[m]) {
         father[m].apply(this, ready(b));
     }
+    */
     return b;
 }
 

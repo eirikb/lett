@@ -1,9 +1,9 @@
 my.first.lib: { 
-    a: 'oh my',
-    k: test(),
-    add[a b]: +(a b),
-    number: 1337,
-    tr: true,
+    a: 'oh my'
+    k: test()
+    add(a b): +(a b)
+    number: 1337
+    tr: true
     f: false
 }
 
