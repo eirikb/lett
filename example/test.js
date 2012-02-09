@@ -4,6 +4,9 @@ util = require('util');
 var lett = require('../lett.js');
 
 fs.readFile(process.argv[2], function(e, d) {
-    console.log(util.inspect(lett.letteval(d.toString()), true, null));
+    var l = lett.letteval(d.toString());
+    console.log(util.inspect(l, true, null));
+
+    console.log(l.my.first.lib.add(1, 2, 3))
 });
 

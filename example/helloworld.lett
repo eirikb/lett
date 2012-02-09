@@ -1,4 +1,5 @@
-a.b: {
+;a.b: {
+    q: 'oh my'
     c: {
         d: 1
         e: 2
@@ -6,10 +7,10 @@ a.b: {
     f: ' test }'
     g: 1337
     h.i.j: 8
-;    k.l: {
-;        m: 'n'
-;    }
-}
+    k.l: {
+        m: 'n'
+    }
+;}
 o: 42
     
         
@@ -23,7 +24,7 @@ o: 42
 ;    inner-object: 7
 ;    very.inner-object: 'Works!'
 ;
-;    add[a b]: {
+;    add(a b): {
 ;        text: str('You added ' a ' and ' b ' togehter, like a boss.\n')
 ;        result: +(a b)
 ;        more-text: str('And got ' result ' as result, same as ' +(a b))
