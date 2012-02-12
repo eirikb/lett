@@ -1,0 +1,12 @@
+family.brandtzæg/blindheim {
+  eirikb {
+    age 25
+    type 'hipster'
+  }
+  ane {
+    age 24
+    type 'administrator'
+  }
+}
+
+console.log(family.brandtzæg/blindheim.ane.age)

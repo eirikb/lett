@@ -1,0 +1,5 @@
+client require('net')
+
+client.connect(80 'google.com' (
+  client.on('data' (data console.log(data)))
+))

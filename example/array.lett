@@ -1,0 +1,7 @@
+array(1 2 3).map(
+  (i +(i 1))
+).filter(
+  (i >(i 2))
+).join(
+  (i str('Number ' i))
+)
