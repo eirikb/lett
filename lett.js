@@ -51,10 +51,12 @@ function print(a, l) {
     if (!l) l = 0;
     var s = new Array(l + 1).join(' ');
     a.forEach(function(b) {
+        var x = '';
         if (Array.isArray(b)) {
             print(b, l + 2);
         } else {
-            console.log(s, b);
+            if (b.type === '(') x = ' (fn)';
+            console.log(s, b.part + x);
         }
     });
 }
