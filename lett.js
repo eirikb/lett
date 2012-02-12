@@ -104,6 +104,7 @@ function assign(b) {
 }
 
 function exec(b, parent) {
+    console.log('EXEC', b)
     var i, m, t, i = b.indexOf('(');
     m = b.slice(0, i);
     b = b.slice(i + 1, b.lastIndexOf(')'));

@@ -1,42 +1,16 @@
-;a.b: {
-    q: 'oh my'
-    c: {
-        d: 1
-        e: 2
+a.b {
+    q 'oh 
+my
+oh my'
+    c {
+        d 1
+        e 2
     }
-    f: ' test }'
-    g: 1337
-    h.i.j: 8
-    k.l: {
-        m: 'n'
+    f ' test }'
+    g 1337
+    h.i.j 8
+    k.l {
+        m 'n'
     }
-;}
-o: 42
-    
-        
-;my.test-lib: {
-;    a: 'hello'
-;    b: 'world'
-;    c: 1337
-;    t: true
-;    f: false
-;
-;    inner-object: 7
-;    very.inner-object: 'Works!'
-;
-;    add(a b): {
-;        text: str('You added ' a ' and ' b ' togehter, like a boss.\n')
-;        result: +(a b)
-;        more-text: str('And got ' result ' as result, same as ' +(a b))
-;
-;        console.log(more-text)
-;
-;        result
-;    }
-;}
-;
-;{
-;    just: 'a test'
-;}
-;
-;+(1 2)
+}
+o 42
