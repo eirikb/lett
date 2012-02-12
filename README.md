@@ -10,5 +10,5 @@ Not to be confused with CoffeeScript, it's not the same in any way.
 Run example
 --
 
-   node example/test.js example/helloworld.lett
+   node test.js example/helloworld.lett
 
