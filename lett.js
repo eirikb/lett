@@ -68,6 +68,11 @@ var lett = (function() {
         return current;
     }
 
+    function removeComments() {
+        code = code.replace(/\/\/.*\n/g, '');
+    }
+
+    // Currently only building parse tree
     function build(c) {
         code = c;
         removeComments();
