@@ -1,87 +1,132 @@
 if (typeof require !== 'undefined') corelib = require('./corelib.js');
+if (typeof require !== 'undefined') parser = require('./parser.js');
 
 var lett = (function() {
-    var fn, code, tmp, wraps = {
-        '{': '}',
-        '(': ')'
-    },
-    types = {
-        '{': 'obj',
-        '(': 'fn',
-        '"': 'str',
-        "'": 'str'
-    };
+    var handle = {
+        obj: function(node, obj) {
+            var vars = assignVars(node.children);
+            vars.forEach(function(c) {
+                assignVar(c, obj);
+            });
+            return obj;
+        },
 
-    function buildTree(t, level) {
-        var type, p, index, end, l, part = '',
-        current = [],
-        chain = [],
-        addPart = function(type) {
-            var tmp;
-            part = part.slice(0, part.length - 1).trim();
-            if (part.length > 0) {
-                part = {
-                    part: part,
-                    type: types[type]
-                };
-                if (part.type === 'fn' && part.part) part.type = 'call';
-                current.push(part);
-                tmp = part;
-                part = '';
-                return tmp;
+        call: function(node, obj) {
+            var fn, args, parent = node.val.split('.').slice(0, -1).join('');
+            parent = getReference(parent, obj);
+
+            args = node.children.map(function(n) {
+                return letteval(n, obj);
+            });
+            if (node.val.match(/^\./)) {
+                node.val = node.val.slice(1);
+                parent = obj;
             }
-        };
-        level = level || 0;
+            fn = getReference(node.val, obj);
+            if (fn) fn = fn.apply(parent, args);
+            if (fn && node.chain) return handle.call(node.chain, fn);
+            return fn;
+        },
 
-        while ((index = code.search(/\{|\}|'|"|\(|\)| /)) >= 0) {
-            part += code.slice(0, index + 1);
-            l = code.charAt(index);
-            code = code.slice(index + 1);
-
-            if (!end) p = addPart(l);
-
-            if (l.match(/'|"/)) {
-                if (end && end === l) {
-                    addPart(l);
-                    end = false;
-                } else if (!end) {
-                    end = l;
+        fn: function(node, obj) {
+            var vars = [], j = 0, fnbody;
+            node.children.every(function(c, i) {
+                if (!c.type) {
+                    vars.push(c.val);
+                    j++;
+                    return true;
                 }
-            } else if (l.match(/\{|\(/)) {
-                if (p && p.type === 'call') {
-                    p.args = buildTree(wraps[l], level + 1);
-                    if (p.part.match(/^\./) && chain[level]) {
-                        chain[level].chain = p;
-                        current.splice(current.indexOf(p));
-                    }
-                    chain[level] = p;
-                } else {
-                    current.push({
-                        children: buildTree(wraps[l], level + 1),
-                        type: types[l]
-                    });
-                }
-            } else if (l === t) {
-                return current;
-            }
+            });
+            fnbody = node.children.slice(j);
+            return function() {
+                var a = arguments;
+                vars.forEach(function(v, i) {
+                    obj[v] = a[i];
+                });
+                return functionBody(fnbody, obj);
+            };
+        },
+
+        str: function(node) {
+            return node.val;
         }
-        return current;
+    };
+    function getReference(name, obj) {
+        var r = obj;
+        name.split(/\./).forEach(function(name) {
+            parent = r;
+            r = r && r[name];
+            if (typeof r === 'undefined') r = this[name];
+            if (typeof r === 'undefined') r = corelib[name];
+        });
+        return r;
     }
 
-    function removeComments() {
-        code = code.replace(/\/\/.*\n/g, '');
+    function assignVar(v, obj) {
+        var c, r = obj;
+        if (v.length === 2) {
+            c = v[0].split(/\./);
+            c.slice(0, - 1).forEach(function(c) {
+                if (!r[c]) r[c] = r = {};
+            });
+            r[c.slice( - 1)] = letteval(v[1], {});
+            return obj;
+        } else {
+            return letteval(v, obj);
+        }
     }
 
-    // Currently only building parse tree
-    function build(c) {
-        code = c;
-        removeComments();
-        return buildTree();
+    function functionBody(vars, obj) {
+        vars = assignVars(vars);
+        vars.slice(0, - 1).forEach(function(v) {
+            assignVar(v, obj);
+        });
+        return assignVar(vars.slice( - 1)[0], obj);
+    }
+
+    // Assign variables by % 2 factor
+    function assignVars(vars) {
+        var name, obj = [],
+        j = 0;
+        vars.forEach(function(v, i) {
+            if (j % 2 === 0) {
+                if (!v.type && i < vars.length - 1) {
+                    name = v.val;
+                    j++;
+                } else {
+                    obj.push(v);
+                }
+            } else {
+                obj.push([name, v]);
+                j++;
+            }
+        });
+        return obj;
+    }
+
+    // Evaluate the code
+    function letteval(node, obj) {
+        var h;
+        if (node) {
+            h = parseInt(node.val, 10);
+            if (!isNaN(h)) return h;
+            h = handle[node.type];
+            if (h) return h(node, obj);
+            h = getReference(node.val, obj);
+            if (typeof h !== 'undefined') return h;
+            return null;
+        }
+    }
+
+    function build(code) {
+        var tree = parser.parse(code);
+        tree = functionBody(tree, {});
+        console.log('Result', tree);
+        return tree;
     }
 
     return {
-        build: build,
-        buildTree: build
+        build: build
     };
 })();
 

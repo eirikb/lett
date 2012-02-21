@@ -40,9 +40,10 @@ var corelib = {
     array: function() {
         return Array.prototype.slice.call(arguments);
     },
-    '>': function() {
-        var a = parseInt(arguments[0], 10),
-        b = parseInt(arguments[1], 10);
+    '>': function(a, b) {
+        console.log(a, b)
+        var a = parseInt(a, 10),
+        b = parseInt(b, 10);
         return a > b;
     },
     '<': function(a, b) {
@@ -53,8 +54,9 @@ var corelib = {
     '==': function(a, b) {
         return a === b;
     },
-    'if': function() {
-        console.log(arguments);
+    'if': function(con, a, b) {
+        if (con) return a;
+        else return b;
     }
 };
 

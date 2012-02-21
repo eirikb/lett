@@ -1,9 +1,0 @@
-test {
-  add (a b +(a b))
-  addTwoIfGreaterThanZero (n 
-    if( >(n 0) 
-      add(n 2) 
-      n))
-}
-
-console.log(test.addTwoIfGreaterThanZero(8))
