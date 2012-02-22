@@ -55,6 +55,7 @@ var corelib = {
         return a === b;
     },
     'if': function(con, a, b) {
+        console.log(con, a, b)
         if (con) return a;
         else return b;
     }

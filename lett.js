@@ -12,24 +12,34 @@ var lett = (function() {
         },
 
         call: function(node, obj) {
-            var fn, args, parent = node.val.split('.').slice(0, -1).join('');
-            parent = getReference(parent, obj);
+            var fn, args, parent;
+            if (node.val.ret) {
+                fn = node.val.ret;
+            } else {
+                parent = node.val.split('.').slice(0, - 1).join('');
+                parent = getReference(parent, obj);
+            }
 
             args = node.children.map(function(n) {
                 return letteval(n, obj);
             });
-            if (node.val.match(/^\./)) {
-                node.val = node.val.slice(1);
-                parent = obj;
+            if (!fn) {
+                if (node.val.match(/^\./)) {
+                    node.val = node.val.slice(1);
+                    parent = obj;
+                }
+                fn = getReference(node.val, obj);
             }
-            fn = getReference(node.val, obj);
             if (fn) fn = fn.apply(parent, args);
             if (fn && node.chain) return handle.call(node.chain, fn);
             return fn;
         },
 
         fn: function(node, obj) {
-            var vars = [], j = 0, fnbody;
+            var vars = [],
+            j = 0,
+            fnbody,
+            ret;
             node.children.every(function(c, i) {
                 if (!c.type) {
                     vars.push(c.val);
@@ -38,13 +48,15 @@ var lett = (function() {
                 }
             });
             fnbody = node.children.slice(j);
-            return function() {
+            ret = function() {
                 var a = arguments;
                 vars.forEach(function(v, i) {
                     obj[v] = a[i];
                 });
                 return functionBody(fnbody, obj);
             };
+            node.ret = ret;
+            return ret;
         },
 
         str: function(node) {
