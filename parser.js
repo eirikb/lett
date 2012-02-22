@@ -119,5 +119,5 @@ var parser = (function() {
     };
 })();
 
-if (typeof module !== 'undefined') module.exports = parser.parse;
+if (typeof module !== 'undefined') module.exports = parser;
 
