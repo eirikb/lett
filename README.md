@@ -24,14 +24,14 @@ Current symbols are:
     welcome { 
         to 'the world'
         and {
-            the 'rest'
+            in 'the'
             year 2012
         }
     } 
 
 ### Calling functions
 
-    console.log('hello' 'world)
+    console.log('hello' 'world')
 
 ### Creating functions
 
