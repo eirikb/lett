@@ -1,7 +1,10 @@
 //
 //  Here be global library function hacks
 //
-var corelib = {
+
+var lettlib;
+if (!lettlib) lettlib = {};
+lettlib.core = {
     '+': function() {
         var i, n = parseInt(arguments[0], 10);
         for (i = 1; i < arguments.length; i++) {
@@ -41,13 +44,12 @@ var corelib = {
         return Array.prototype.slice.call(arguments);
     },
     '>': function(a, b) {
-        console.log(a, b)
-        var a = parseInt(a, 10),
+        a = parseInt(a, 10);
         b = parseInt(b, 10);
         return a > b;
     },
     '<': function(a, b) {
-        var a = parseInt(a, 10),
+        a = parseInt(a, 10);
         b = parseInt(b, 10);
         return a > b;
     },
@@ -55,15 +57,14 @@ var corelib = {
         return a === b;
     },
     'if': function(con, a, b) {
-        console.log(con, a, b)
         if (con) return a;
         else return b;
     }
 };
 
 if (typeof module !== 'undefined') {
-    Object.keys(corelib).forEach(function(key) {
-        exports[key] = corelib[key];
+    Object.keys(lettlib.core).forEach(function(key) {
+        exports[key] = lettlib.core[key];
     });
 }
 
