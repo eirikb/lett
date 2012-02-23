@@ -1,8 +1,85 @@
-if (typeof require !== 'undefined') corelib = require('./corelib.js');
-if (typeof require !== 'undefined') parser = require('./parser.js');
+var lettlib, _;
+
+if (typeof require !== 'undefined') {
+    lettlib = {
+        parse: require('./parselib.js'),
+        core: require('./corelib.js')
+    };
+    _ = require('underscore');
+}
 
 var lett = (function() {
-    var handle = {
+    var handle;
+
+    function getReference(name, obj) {
+        var r = obj;
+        name.split(/\./).forEach(function(name) {
+            var parent = r;
+            r = r && r[name];
+            if (typeof r === 'undefined') r = this[name];
+            if (typeof r === 'undefined') r = lettlib.core[name];
+            if (typeof r === 'undefined' && _) r = _[name];
+        });
+        return r;
+    }
+
+    // Evaluate the code
+    function letteval(node, obj) {
+        var h;
+        if (node) {
+            h = parseInt(node.val, 10);
+            if (!isNaN(h)) return h;
+            h = handle[node.type];
+            if (h) return h(node, obj);
+            h = getReference(node.val, obj);
+            if (typeof h !== 'undefined') return h;
+            return null;
+        }
+    }
+
+    function assignVar(v, obj) {
+        var c, r = obj;
+        if (v.length === 2) {
+            c = v[0].split(/\./);
+            c.slice(0, - 1).forEach(function(c) {
+                if (!r[c]) r[c] = r = {};
+            });
+            r[c.slice( - 1)] = letteval(v[1], {});
+            return obj;
+        } else {
+            return letteval(v, obj);
+        }
+    }
+
+    // Assign variables by % 2 factor
+    function assignVars(vars) {
+        var name, obj = [],
+        j = 0;
+        vars.forEach(function(v, i) {
+            if (j % 2 === 0) {
+                if (!v.type && i < vars.length - 1) {
+                    name = v.val;
+                    j++;
+                } else {
+                    obj.push(v);
+                }
+            } else {
+                obj.push([name, v]);
+                j++;
+            }
+        });
+        return obj;
+    }
+
+    function functionBody(vars, obj) {
+        vars = assignVars(vars);
+        vars.slice(0, - 1).forEach(function(v) {
+            assignVar(v, obj);
+        });
+        return assignVar(vars.slice( - 1)[0], obj);
+    }
+
+    handle = {
         obj: function(node, obj) {
             var vars = assignVars(node.children);
             vars.forEach(function(c) {
@@ -63,84 +140,15 @@ var lett = (function() {
             return node.val;
         }
     };
-    function getReference(name, obj) {
-        var r = obj;
-        name.split(/\./).forEach(function(name) {
-            parent = r;
-            r = r && r[name];
-            if (typeof r === 'undefined') r = this[name];
-            if (typeof r === 'undefined') r = corelib[name];
-        });
-        return r;
-    }
-
-    function assignVar(v, obj) {
-        var c, r = obj;
-        if (v.length === 2) {
-            c = v[0].split(/\./);
-            c.slice(0, - 1).forEach(function(c) {
-                if (!r[c]) r[c] = r = {};
-            });
-            r[c.slice( - 1)] = letteval(v[1], {});
-            return obj;
-        } else {
-            return letteval(v, obj);
-        }
-    }
-
-    function functionBody(vars, obj) {
-        vars = assignVars(vars);
-        vars.slice(0, - 1).forEach(function(v) {
-            assignVar(v, obj);
-        });
-        return assignVar(vars.slice( - 1)[0], obj);
-    }
-
-    // Assign variables by % 2 factor
-    function assignVars(vars) {
-        var name, obj = [],
-        j = 0;
-        vars.forEach(function(v, i) {
-            if (j % 2 === 0) {
-                if (!v.type && i < vars.length - 1) {
-                    name = v.val;
-                    j++;
-                } else {
-                    obj.push(v);
-                }
-            } else {
-                obj.push([name, v]);
-                j++;
-            }
-        });
-        return obj;
-    }
-
-    // Evaluate the code
-    function letteval(node, obj) {
-        var h;
-        if (node) {
-            h = parseInt(node.val, 10);
-            if (!isNaN(h)) return h;
-            h = handle[node.type];
-            if (h) return h(node, obj);
-            h = getReference(node.val, obj);
-            if (typeof h !== 'undefined') return h;
-            return null;
-        }
-    }
 
     function build(code) {
-        var tree = parser.parse(code);
+        var tree = lettlib.parse(code);
         tree = functionBody(tree, {});
-        console.log('Result', tree);
         return tree;
     }
 
-    return {
-        build: build
-    };
+    return build;
 })();
 
-if (typeof module !== 'undefined') module.exports = lett.build;
+if (typeof module !== 'undefined') module.exports = lett;
 
