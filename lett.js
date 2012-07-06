@@ -9,142 +9,100 @@ if (typeof require !== 'undefined') {
 }
 
 var lett = (function() {
-    var handle;
+    var handle, last;
 
-    function getReference(name, obj) {
-        var r = obj;
-        name.split(/\./).forEach(function(name) {
-            var parent = r;
-            r = r && r[name];
-            if (typeof r === 'undefined') r = this[name];
-            if (typeof r === 'undefined') r = lettlib.core[name];
-            if (typeof r === 'undefined' && _) r = _[name];
-        });
-        return r;
-    }
-
-    // Evaluate the code
     function letteval(node, obj) {
-        var h;
-        if (node) {
-            h = parseInt(node.val, 10);
-            if (!isNaN(h)) return h;
-            h = handle[node.type];
-            if (h) return h(node, obj);
-            h = getReference(node.val, obj);
-            if (typeof h !== 'undefined') return h;
-            return null;
+        if (node.name) {
+            console.log('HANDLE', node.name, node[0]);
+            var a = handle[node.name](node, obj);
+            last = a;
+            return a;
         }
+        return node;
     }
 
-    function assignVar(v, obj) {
-        var c, r = obj;
-        if (v.length === 2) {
-            c = v[0].split(/\./);
-            c.slice(0, - 1).forEach(function(c) {
-                if (!r[c]) r[c] = r = {};
-            });
-            r[c.slice( - 1)] = letteval(v[1], {});
-            return obj;
-        } else {
-            return letteval(v, obj);
-        }
-    }
-
-    // Assign variables by % 2 factor
-    function assignVars(vars) {
-        var name, obj = [],
+    // Assign variables by % 2 factor, return [{name:...},{name:...}]
+    function assignVars(vars, obj) {
+        var varname, objs = [],
         j = 0;
+        function push(v) {
+            v = letteval(v, obj);
+            v.varname = varname;
+            objs.push(v);
+        }
         vars.forEach(function(v, i) {
             if (j % 2 === 0) {
-                if (!v.type && i < vars.length - 1) {
-                    name = v.val;
+                if (!v.name && i < vars.length - 1) {
+                    varname = v.val;
                     j++;
                 } else {
-                    obj.push(v);
+                    push(v);
                 }
             } else {
-                obj.push([name, v]);
+                push(v);
                 j++;
             }
         });
-        return obj;
+        return objs;
     }
 
-    function functionBody(vars, obj) {
-        vars = assignVars(vars);
-        vars.slice(0, - 1).forEach(function(v) {
-            assignVar(v, obj);
-        });
-        return assignVar(vars.slice( - 1)[0], obj);
+    function fnbody(node, obj) {
+        var vars = assignVars(node, obj);
+        return vars[vars.length - 1];
     }
 
     handle = {
         obj: function(node, obj) {
             var vars = assignVars(node.children);
             vars.forEach(function(c) {
-                assignVar(c, obj);
+                assignVar(c);
             });
             return obj;
         },
 
         call: function(node, obj) {
             var fn, args, parent;
-            if (node.val.ret) {
-                fn = node.val.ret;
-            } else {
-                parent = node.val.split('.').slice(0, - 1).join('');
-                parent = getReference(parent, obj);
-            }
+            console.log(node)
+            fn = last;
 
-            args = node.children.map(function(n) {
+            args = node.map(function(n) {
                 return letteval(n, obj);
             });
-            if (!fn) {
-                if (node.val.match(/^\./)) {
-                    node.val = node.val.slice(1);
-                    parent = obj;
-                }
-                fn = getReference(node.val, obj);
-            }
             if (fn) fn = fn.apply(parent, args);
-            if (fn && node.chain) return handle.call(node.chain, fn);
             return fn;
         },
 
         fn: function(node, obj) {
             var vars = [],
             j = 0,
-            fnbody,
+            body,
             ret;
-            node.children.every(function(c, i) {
-                if (!c.type) {
-                    vars.push(c.val);
-                    j++;
-                    return true;
-                }
-            });
-            fnbody = node.children.slice(j);
+
+            vars = node.slice(0, - 1);
+            //body = node[node.length - 1];
+            body = node.slice(-1);
+
             ret = function() {
                 var a = arguments;
                 vars.forEach(function(v, i) {
                     obj[v] = a[i];
                 });
-                return functionBody(fnbody, obj);
+                return letteval(body, obj);
             };
             node.ret = ret;
             return ret;
         },
 
-        str: function(node) {
+        str: function(node, obj) {
             return node.val;
         }
     };
 
     function build(code) {
-        var tree = lettlib.parse(code);
-        tree = functionBody(tree, {});
-        return tree;
+        var tree, vars;
+
+        tree = lettlib.parse(code);
+        return fnbody(tree, {});
     }
 
     return build;
