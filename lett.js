@@ -80,7 +80,7 @@ var lett = (function() {
 
             vars = node.slice(0, - 1);
             //body = node[node.length - 1];
-            body = node.slice(-1);
+            body = node.slice( - 1);
 
             ret = function() {
                 var a = arguments;
@@ -102,7 +102,9 @@ var lett = (function() {
         var tree, vars;
 
         tree = lettlib.parse(code);
-        return fnbody(tree, {});
+        console.log(tree);
+        return tree;
+        //return fnbody(tree, {});
     }
 
     return build;
