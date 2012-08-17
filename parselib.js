@@ -69,11 +69,32 @@ lettlib.parse = (function() {
         return root;
     }
 
+    // Call bodies are by default positions after a call
+    function remapCall(tree) {
+        tree = tree.filter(function(t, i) {
+            if (t.name === 'call') {
+                t.call = tree[i - 1];
+            }
+            return !(tree.length > i + 1 && tree[i + 1].name === 'call');
+        });
+        return tree.map(function(t) {
+            if (t.name === 'call') {
+                var t1 = remapCall(t);
+                t1.call = t.call;
+                t1.name = 'call';
+                t1.parent = t.parent;
+                return t1;
+            }
+            return t;
+        });
+    }
+
     function parse(code) {
         var tree, parts;
         tree = buildTree(code).filter(function(branch) {
             return branch;
         });
+        tree = remapCall(tree);
         return tree;
     }
 
