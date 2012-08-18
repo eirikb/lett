@@ -1,3 +1,10 @@
+var last;
+
+exports.build = function(tree) {
+    var vars = assignVars(tree, {});
+    return vars[vars.length - 1];
+};
+
 function letteval(node, obj) {
     if (node.name) {
         var a = handle[node.name](node, obj);
@@ -53,7 +60,7 @@ var handle = {
         args = node.map(function(n) {
             return letteval(n, obj);
         });
-        if (fn) fn = fn.apply(parent, args);
+        //if (fn) fn = fn.apply(parent, args);
         return fn;
     },
 
@@ -83,7 +90,3 @@ var handle = {
     }
 };
 
-exports.build = function(tree) {
-    var vars = assignVars(tree, {});
-    return vars[vars.length - 1];
-};
