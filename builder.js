@@ -1,4 +1,4 @@
-var last;
+var corelib = require('./corelib.js');
 
 exports.build = function(tree) {
     var vars = assignVars(tree, {});
@@ -8,15 +8,15 @@ exports.build = function(tree) {
 function letteval(node, obj) {
     if (node.name) {
         var a = handle[node.name](node, obj);
-        last = a;
         return a;
     }
+    if (obj[node]) return obj[node];
     return node;
 }
 
 // Assign variables by % 2 factor, return [{name:...},{name:...}]
 function assignVars(vars, obj) {
-    if (vars.length === 1) return letteval(vars[0], obj);
+    if (vars.length === 1) return [letteval(vars[0], obj)];
 
     var varname
     var objs = [];
@@ -26,12 +26,14 @@ function assignVars(vars, obj) {
         v = letteval(v, obj);
         v.varname = varname;
         objs.push(v);
+        obj[varname] = v;
+        varname = null;
     }
 
     vars.forEach(function(v, i) {
         if (j % 2 === 0) {
             if (!v.name && i < vars.length - 1) {
-                varname = v.val;
+                varname = v;
                 j++;
             } else {
                 push(v);
@@ -46,22 +48,28 @@ function assignVars(vars, obj) {
 
 var handle = {
     obj: function(node, obj) {
-        var vars = assignVars(node.children);
-        vars.forEach(function(c) {
-            assignVar(c);
-        });
-        return obj;
+        var o = {};
+        var vars = assignVars(node, o);
+        return o;
     },
 
     call: function(node, obj) {
-        var fn, args, parent;
-        fn = last;
+        var fn = obj[node.call];
+        if (!fn) fn = corelib[node.call];
+        if (!fn) return null;
 
-        args = node.map(function(n) {
-            return letteval(n, obj);
-        });
-        //if (fn) fn = fn.apply(parent, args);
-        return fn;
+            var args = node.map(function(n) {
+                return letteval(n, obj);
+            });
+            var f = function() {
+                args = args.map(function(a) {
+                    return a.torun ? a() : obj[a];
+                });
+                return fn.apply(null, args);
+            }
+            // torun is a hack to force building of the whole tree
+            f.torun = true;
+            return f;
     },
 
     fn: function(node, obj) {
@@ -86,7 +94,13 @@ var handle = {
     },
 
     str: function(node, obj) {
-        return node.val;
+        return node[0];
+    },
+
+    array: function(node, obj) {
+        return node.map(function(n) {
+            return letteval(n, obj);
+        });
     }
 };
 
