@@ -41,7 +41,7 @@ describe('arrays', function() {
     });
 
     it('should support arrays of any type', function() {
-        var res = lett('[1 2 {a 42} {a {b "test"}} 7');
+        var res = lett('[1 2 {a 42} {a {b "test"}} 7]');
         assert.equal(2, res[1]);
         assert.equal(42, res[2].a);
         assert.equal("test", res[3].a.b);
