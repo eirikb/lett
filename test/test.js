@@ -50,7 +50,7 @@ describe('arrays', function() {
 });
 
 describe('calls', function() {
-    it('should return 42 when calling 21 + 21', function() {
+    it('should return 42 when adding 21 with 21', function() {
         assert.equal(42, lett('+(21 21)'));
     });
 
@@ -69,9 +69,22 @@ describe('calls', function() {
 });
 
 describe('chaining', function() {
-    // Not yet supported
+    it('should support chaining of objects', function() {
+        //assert.equal(42, lett('a { b 42 } a.b'));
+        //assert.equal(42, lett('a { b { c { d 42 }}} a.b.c.d'));
+    });
 });
 
 describe('functions', function() {
-    // Not yet supported
+    it('should create a function returning 42', function() {
+        assert.equal(42, lett('<,42>')());
+    });
+
+    it('should accept arguments', function() {
+        assert.equal(42, lett('<a,a>')(42));
+    });
+
+    it('should execute function calls within the function', function() {
+        //assert.equal(42, lett('<a b, +(a b)>')());
+    });
 });

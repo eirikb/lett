@@ -72,6 +72,27 @@ var handle = {
             return f;
     },
 
+    fn: function(node, obj) {
+        var vars = [],
+        j = 0,
+        body,
+        ret;
+
+        vars = node.slice(0, - 1);
+        //body = node[node.length - 1];
+        body = node.slice( - 1);
+
+        ret = function() {
+            var a = arguments;
+            vars.forEach(function(v, i) {
+                obj[v] = a[i];
+            });
+            return letteval(body, obj);
+        };
+        node.ret = ret;
+        return ret;
+    },
+
     str: function(node, obj) {
         return node[0];
     },
@@ -80,6 +101,29 @@ var handle = {
         return node.map(function(n) {
             return letteval(n, obj);
         });
+    },
+
+    chain: function(node, obj) {
+        var start = node.parent[0];
+        var res = letteval(start, obj);
+        /*
+        console.log(res)
+
+        start = node[0];
+        res = letteval(start, res);
+        console.log(res)
+
+        start = node[1][0];
+        res = letteval(start, res);
+        console.log(res)
+
+        start = node[1][1][0];
+        res = letteval(start, res);
+        console.log(res)
+       */
+      var t = letteval(node[1][0], obj);
+      console.log('t', t)
+        return res;
     }
 };
 
