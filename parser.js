@@ -42,7 +42,7 @@ function buildTree(code) {
     var chain;
     while (type = searchType(code)) {
         if (type.index === 0) {
-            tmp = [];
+            var tmp = [];
             tmp.name = type.name;
             tmp.parent = current;
             if (type.name === 'str') {
