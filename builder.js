@@ -63,34 +63,13 @@ var handle = {
             });
             var f = function() {
                 args = args.map(function(a) {
-                    return a.torun ? a() : obj[a];
+                    return a.torun ? a() : a;
                 });
                 return fn.apply(null, args);
             }
             // torun is a hack to force building of the whole tree
             f.torun = true;
             return f;
-    },
-
-    fn: function(node, obj) {
-        var vars = [],
-        j = 0,
-        body,
-        ret;
-
-        vars = node.slice(0, - 1);
-        //body = node[node.length - 1];
-        body = node.slice( - 1);
-
-        ret = function() {
-            var a = arguments;
-            vars.forEach(function(v, i) {
-                obj[v] = a[i];
-            });
-            return letteval(body, obj);
-        };
-        node.ret = ret;
-        return ret;
     },
 
     str: function(node, obj) {

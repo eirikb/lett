@@ -1,7 +1,7 @@
 var assert = require('assert')
 var lett = require('../lett.js');
 
-describe('simple assignment', function() {
+describe('assignment', function() {
     it('should return 42 when its the last statement', function() {
         assert.equal(42, lett('42'));
         assert.equal(42, lett('1 42'));
@@ -47,4 +47,31 @@ describe('arrays', function() {
         assert.equal("test", res[3].a.b);
         assert.equal(7, res[res.length - 1]);
     });
+});
+
+describe('calls', function() {
+    it('should return 42 when calling 21 + 21', function() {
+        assert.equal(42, lett('+(21 21)'));
+    });
+
+    it('should support n amount of arguments', function() {
+        assert.equal(42, lett('+(10 10 10 12)'));
+    });
+
+    it('should support nesting of calls', function() {
+        assert.equal(42, lett('+(10 10 +(10 12))'));
+        assert.equal(42, lett('+(10 10 +(10 -(22 10)))'));
+    });
+
+    it('should support any types as arguments', function() {
+        assert.equal(42, lett('a 10 b 20 c 10 +(a b c 2)'));
+    });
+});
+
+describe('chaining', function() {
+    // Not yet supported
+});
+
+describe('functions', function() {
+    // Not yet supported
 });
