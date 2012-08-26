@@ -1,6 +1,5 @@
 exports.parse = function(code) {
-    var tree, parts;
-    tree = buildTree(code).filter(function(branch) {
+    var tree = buildTree(code).filter(function(branch) {
         return branch;
     });
     tree = remapCall(tree);
@@ -35,10 +34,12 @@ function searchType(str) {
 // String splitting on . < > { } [ ] asdf( ) space. 
 // Everything inside ' and " is not split.
 function buildTree(code) {
-    var chain, type, tmp, part = '',
-    root = [],
-    current = root;
+    var part = '';
+    var root = [];
+    var current = root;
 
+    var type;
+    var chain;
     while (type = searchType(code)) {
         if (type.index === 0) {
             tmp = [];
