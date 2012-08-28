@@ -10,7 +10,7 @@ var regexTypes = {
     call: /\(/,
     divide: / /,
     fnbody: /,/,
-    fn: /\</,
+    fn: /</,
     obj: /\{/,
     array: /\[/,
     chain: /\./,

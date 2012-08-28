@@ -1,4 +1,4 @@
-var assert = require('assert')
+var assert = require('assert');
 var lett = require('../lett.js');
 
 describe('assignment', function() {
@@ -85,10 +85,10 @@ describe('functions', function() {
     });
 
     it('should accept arguments', function() {
-//        assert.equal(42, lett('<a,a>')(42));
+        assert.equal(42, lett('<a,a>')(42));
     });
 
     it('should execute function calls within the function', function() {
-//        assert.equal(42, lett('<a b, +(a b) >')());
+        assert.equal(42, lett('<a b, +(a b) >')(21, 21));
     });
 });

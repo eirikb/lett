@@ -18,7 +18,7 @@ function letteval(node, obj) {
 function assignVars(vars, obj) {
     if (vars.length === 1) return [letteval(vars[0], obj)];
 
-    var varname
+    var varname;
     var objs = [];
     var j = 0;
 
@@ -61,21 +61,21 @@ var handle = {
         var args = node.map(function(n) {
             return letteval(n, obj);
         });
-        var f = function() {
+        var f = function(o) {
                 args = args.map(function(a) {
+                    if (o && o[a]) a = o[a];
                     return a.torun ? a() : a;
                 });
                 return fn.apply(null, args);
-            }
-            // torun is a hack to force building of the whole tree
-            f.torun = true;
+            };
+        // torun is a hack to force building of the whole tree
+        f.torun = true;
         return f;
     },
 
     fn: function(node, obj) {
         var vars = node.slice(0, -1);
         var body = node[node.length - 1];
-
         body = letteval(body, obj);
         var last = body[body.length - 1];
 
@@ -84,7 +84,8 @@ var handle = {
             vars.forEach(function(v, i) {
                 obj[v] = a[i];
             });
-            if (last.torun) return last.apply(null, {a:1,b:2});
+            if (obj[last]) last = obj[last];
+            if (last.torun) last = last(obj);
             return last;
         };
     },
