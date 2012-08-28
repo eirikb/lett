@@ -73,23 +73,20 @@ var handle = {
     },
 
     fn: function(node, obj) {
-        var vars = [],
-            j = 0,
-            body, ret;
+        var vars = node.slice(0, -1);
+        var body = node[node.length - 1];
 
-        vars = node.slice(0, -1);
-        //body = node[node.length - 1];
-        body = node.slice(-1);
+        body = letteval(body, obj);
+        var last = body[body.length - 1];
 
-        ret = function() {
+        return function() {
             var a = arguments;
             vars.forEach(function(v, i) {
                 obj[v] = a[i];
             });
-            return letteval(body, obj);
+            if (last.torun) return last.apply(null, {a:1,b:2});
+            return last;
         };
-        node.ret = ret;
-        return ret;
     },
 
     str: function(node, obj) {
@@ -106,5 +103,9 @@ var handle = {
         var name = node.parent[0];
         var val = obj[name];
         return (node[1]) ? letteval(node[1], val) : val[node[0]];
+    },
+
+    fnbody: function(node, obj) {
+        return assignVars(node, obj);
     }
 };
