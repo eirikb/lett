@@ -76,21 +76,14 @@ function buildTree(code) {
 
 // Call bodies are by default positions after a call
 function remapCall(tree) {
-    tree = tree.filter(function(t, i) {
-        if (t.name === 'call') {
-            t.call = tree[i - 1];
+    var i;
+    for (i = 0; i < tree.length; i++) {
+        if (Array.isArray(tree[i])) tree[i] = remapCall(tree[i]);
+        if (tree[i].name === 'call' && i > 0) {
+            tree[i].call = tree[i - 1];
+            tree.splice(i - 1, 1);
         }
-        return ! (tree.length > i + 1 && tree[i + 1].name === 'call');
-    });
-    return tree.map(function(t) {
-        if (t.name === 'call') {
-            var t1 = remapCall(t);
-            t1.call = t.call;
-            t1.name = 'call';
-            t1.parent = t.parent;
-            return t1;
-        }
-        return t;
-    });
+    }
+    return tree;
 }
 
