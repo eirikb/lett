@@ -70,8 +70,8 @@ describe('calls', function() {
 
 describe('chaining', function() {
     it('should support chaining of objects', function() {
-        //assert.equal(42, lett('a { b 42 } a.b'));
-        //assert.equal(42, lett('a { b { c { d 42 }}} a.b.c.d'));
+        assert.equal(42, lett('a { b 42 } a.b'));
+        assert.equal(42, lett('a { b { c { d 42 }}} a.b.c.d'));
     });
 });
 

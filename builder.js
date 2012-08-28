@@ -58,10 +58,10 @@ var handle = {
         if (!fn) fn = corelib[node.call];
         if (!fn) return null;
 
-            var args = node.map(function(n) {
-                return letteval(n, obj);
-            });
-            var f = function() {
+        var args = node.map(function(n) {
+            return letteval(n, obj);
+        });
+        var f = function() {
                 args = args.map(function(a) {
                     return a.torun ? a() : a;
                 });
@@ -69,18 +69,17 @@ var handle = {
             }
             // torun is a hack to force building of the whole tree
             f.torun = true;
-            return f;
+        return f;
     },
 
     fn: function(node, obj) {
         var vars = [],
-        j = 0,
-        body,
-        ret;
+            j = 0,
+            body, ret;
 
-        vars = node.slice(0, - 1);
+        vars = node.slice(0, -1);
         //body = node[node.length - 1];
-        body = node.slice( - 1);
+        body = node.slice(-1);
 
         ret = function() {
             var a = arguments;
@@ -104,26 +103,8 @@ var handle = {
     },
 
     chain: function(node, obj) {
-        var start = node.parent[0];
-        var res = letteval(start, obj);
-        /*
-        console.log(res)
-
-        start = node[0];
-        res = letteval(start, res);
-        console.log(res)
-
-        start = node[1][0];
-        res = letteval(start, res);
-        console.log(res)
-
-        start = node[1][1][0];
-        res = letteval(start, res);
-        console.log(res)
-       */
-      var t = letteval(node[1][0], obj);
-      console.log('t', t)
-        return res;
+        var name = node.parent[0];
+        var val = obj[name];
+        return (node[1]) ? letteval(node[1], val) : val[node[0]];
     }
 };
-
