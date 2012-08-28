@@ -73,6 +73,10 @@ describe('chaining', function() {
         assert.equal(42, lett('a { b 42 } a.b'));
         assert.equal(42, lett('a { b { c { d 42 }}} a.b.c.d'));
     });
+
+    it('should support directly on objects', function() {
+        assert.equal(42, lett('a { b { c { d 42 }}}.b.c.d'));
+    });
 });
 
 describe('functions', function() {
