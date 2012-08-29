@@ -11,7 +11,9 @@ function letteval(node, obj) {
         var a = handle[node.name](node, obj);
         return a;
     }
-    if (obj[node]) return obj[node];
+    if (obj[node]) node = obj[node];
+    if ((''+node).match(/^true$/i)) node = true;
+    else if ((''+node).match(/^false$/)) node = false;
     return node;
 }
 

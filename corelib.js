@@ -40,20 +40,17 @@ lettlib.core = {
         }
         return s;
     },
-    array: function() {
-        return Array.prototype.slice.call(arguments);
-    },
-    '>': function(a, b) {
+    'gt': function(a, b) {
         a = parseInt(a, 10);
         b = parseInt(b, 10);
         return a > b;
     },
-    '<': function(a, b) {
+    'lt': function(a, b) {
         a = parseInt(a, 10);
         b = parseInt(b, 10);
-        return a > b;
+        return a < b;
     },
-    '==': function(a, b) {
+    'eq': function(a, b) {
         return a === b;
     },
     'if': function(con, a, b) {

@@ -13,6 +13,12 @@ describe('assignment', function() {
         assert.equal(3, lett('a 3 a'));
         assert.equal(3, lett('a 7 a 3 a'));
     });
+
+    // They are litterals! I promise!
+    it('should set true and false to ... true and false', function() {
+        assert.equal(true, lett('true'));
+        assert.equal(false, lett('false'));
+    });
 });
 
 describe('objects', function() {
