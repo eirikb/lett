@@ -7,9 +7,6 @@
     "repository": {
         "type": "git", 
         "url": "https://github.com/eirikb/lett"
-    },
-    "dependencies": {
-        "underscore": ""
     }
 }
 
