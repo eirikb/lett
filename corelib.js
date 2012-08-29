@@ -1,10 +1,7 @@
 //
 //  Here be global library function hacks
 //
-
-var lettlib;
-if (!lettlib) lettlib = {};
-lettlib.core = {
+var corelib = {
     '+': function() {
         var i, n = parseInt(arguments[0], 10);
         for (i = 1; i < arguments.length; i++) {
@@ -59,9 +56,6 @@ lettlib.core = {
     }
 };
 
-if (typeof module !== 'undefined') {
-    Object.keys(lettlib.core).forEach(function(key) {
-        exports[key] = lettlib.core[key];
-    });
-}
-
+Object.keys(corelib).forEach(function(key) {
+    exports[key] = corelib[key];
+});
