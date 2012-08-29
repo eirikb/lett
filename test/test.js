@@ -103,3 +103,19 @@ describe('functions', function() {
         assert.equal(42, lett('test <a,a> test(42)'));
     });
 });
+
+describe('getters', function() {
+    it('should support getters by calls with no name', function() {
+        // TODO: Not implemented
+        //assert.equal(42, lett('a {b 42} (a "b")'));
+    });
+});
+
+describe('object paramters', function() {
+    it('can be sent into <,> as arguments', function() {
+        var a = {
+            b: 42
+        };
+        assert.equal(42, lett('b', a));
+    });
+});

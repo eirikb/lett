@@ -1,7 +1,8 @@
 var corelib = require('./corelib.js');
 
-exports.build = function(tree) {
-    var vars = assignVars(tree, {});
+exports.build = function(tree, obj) {
+    if (!obj) obj = {};
+    var vars = assignVars(tree, obj);
     return vars[vars.length - 1];
 };
 
