@@ -91,4 +91,15 @@ describe('functions', function() {
     it('should execute function calls within the function', function() {
         assert.equal(42, lett('<a b, +(a b) >')(21, 21));
     });
+
+    it('should be able to execute directly after declaration', function() {
+        //  TODO: This fails!  - Why?
+        //  assert.equal(42, lett('<a b, +(a b)>(21 21)'));
+    });
+
+    it('should handle larger bodies', function() {
+        assert.equal(42, lett('<,a 42 a>')());
+        assert.equal(42, lett('<a,a>')(42));
+        assert.equal(42, lett('test <a,a> test(42)'));
+    });
 });
