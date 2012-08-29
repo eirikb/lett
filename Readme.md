@@ -1,8 +1,15 @@
 # <,>
 
+## Install
+```
+npm install lett
+```
+
+## Usage
+
 ### Variables
 ```
-a 1 b 2
+a 1 b 2 
 ```
 
 ### Function calls
