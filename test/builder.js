@@ -20,6 +20,10 @@ describe('builder', function() {
             assert.equal(true, lett('true'));
             assert.equal(false, lett('false'));
         });
+
+        it('should support incrementing', function() {
+            assert.equal(42, lett('kaffe 41 kaffe +(kaffe 1) kaffe'));
+        });
     });
 
     describe('objects', function() {
@@ -109,12 +113,9 @@ describe('builder', function() {
             assert.equal(42, lett('<a,a>')(42));
             assert.equal(42, lett('test <a,a> test(42)'));
         });
-    });
 
-    describe('getters', function() {
-        it('should support getters by calls with no name', function() {
-            // TODO: Not implemented
-            //assert.equal(42, lett('a {b 42} (a "b")'));
+        it('should support nesting', function() {
+            assert.equal(42, lett('f1 <,f2 <,42> f2()> f1()'));
         });
     });
 
