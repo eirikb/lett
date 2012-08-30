@@ -1,4 +1,5 @@
 exports.parse = function(code) {
+    code = code.replace(/\n|\r/g, ' ');
     var tree = buildTree(code).filter(function(branch) {
         return branch;
     });
