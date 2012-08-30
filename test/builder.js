@@ -117,6 +117,11 @@ describe('builder', function() {
         it('should support nesting', function() {
             assert.equal(42, lett('f1 <,f2 <,42> f2()> f1()'));
         });
+
+        it('should support being used as inline arguments', function() {
+            //  TODO: Fails
+            //  assert.equal(42, lett('f1 <a,a(42)> f1(<a,a>)'));
+        });
     });
 
     describe('object paramters', function() {
