@@ -41,5 +41,14 @@ describe('corelib', function() {
         it('should handle equality', function() {
             assert.equal(true, lett('eq(42 42)'));
         });
+
+        it('should support getters', function() {
+            var o = {
+                a: {
+                    b: 42
+                }
+            };
+            assert.equal(42, lett('g(a "b")', o));
+        });
     });
 });
