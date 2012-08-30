@@ -37,22 +37,26 @@ var corelib = {
         }
         return s;
     },
-    'gt': function(a, b) {
+    gt: function(a, b) {
         a = parseInt(a, 10);
         b = parseInt(b, 10);
         return a > b;
     },
-    'lt': function(a, b) {
+    lt: function(a, b) {
         a = parseInt(a, 10);
         b = parseInt(b, 10);
         return a < b;
     },
-    'eq': function(a, b) {
+    eq: function(a, b) {
         return a === b;
     },
-    'if': function(con, a, b) {
+    if: function(con, a, b) {
         if (con) return a;
         else return b;
+    },
+    g: function(o, n) {
+        console.log(o, n)
+        return o[n];
     }
 };
 
