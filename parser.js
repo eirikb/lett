@@ -47,6 +47,7 @@ function buildTree(code) {
             tmp.parent = current;
             if (type.name === 'str') {
                 type.index = code.indexOf(code.charAt(type.index), 1);
+                if (type.index < 0) break;
                 tmp.push(code.slice(1, type.index));
                 current.push(tmp);
             } else if (type.name === 'end') {
