@@ -59,7 +59,7 @@ var handle = {
     call: function(node, obj) {
         var fn = obj[node.call];
         if (!fn) fn = corelib[node.call];
-        if (!fn) return null;
+        if (!fn) fn = letteval(node.call, obj);
 
         var args = node.map(function(n) {
             return letteval(n, obj);
