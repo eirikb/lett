@@ -21,7 +21,6 @@ describe('lett', function() {
         lett('a 41', o)
         lett('a +(a 1)', o)
         assert.equal(42, lett('a', o));
-        // TODO :Add back when works
-        // assert.equal(42, o.a);
+        assert.equal(42, o.a);
     });
 });

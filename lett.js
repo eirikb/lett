@@ -19,8 +19,10 @@ module.exports = function(code, obj) {
         return o;
     }
 
-    runAll(obj);
+    if (build) {
+        runAll(obj);
+        if (build.torun) build = build();
+    }
 
-    if (build.torun) build = build();
     return build;
 };

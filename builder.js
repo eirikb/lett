@@ -11,9 +11,15 @@ function letteval(node, obj) {
         var a = handle[node.name](node, obj);
         return a;
     }
-    if (obj[node]) node = obj[node];
-    if ((''+node).match(/^true$/i)) node = true;
-    else if ((''+node).match(/^false$/)) node = false;
+    if (obj[node]) return obj[node];
+    if ((''+node).match(/^true$/i)) return true;
+    if ((''+node).match(/^false$/)) return false;
+    if (corelib[node]) return corelib[node];
+
+    var n = parseInt(n, 10);
+    if (!isNaN(n)) return n;
+    // TODO: Add this back
+    //return null;
     return node;
 }
 
@@ -57,7 +63,6 @@ var handle = {
 
     call: function(node, obj) {
         var fn = obj[node.call];
-        if (!fn) fn = corelib[node.call];
         if (!fn) fn = letteval(node.call, obj);
 
         var args = node.map(function(n) {

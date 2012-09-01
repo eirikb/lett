@@ -116,6 +116,12 @@ describe('builder', function() {
 
         it('should support nesting', function() {
             assert.equal(42, lett('f1 <,f2 <,42> f2()> f1()'));
+            assert.equal(42, lett('<,<,42>()>()'));
+        });
+
+        it('should support recursiveness', function() {
+            // TODO: Make work
+            //assert.equal(42, lett('<n,if(lt(n 100) 42 7)>(4)'));
         });
     });
 
@@ -151,10 +157,9 @@ describe('builder', function() {
             var o = {};
             lett('a +(41 1)', o);
             assert.equal(42, o.a);
-            lett('b [+(41 1)]',o);
+            lett('b [+(41 1)]', o);
             assert.equal(42, o.a);
             assert.equal(42, o.b);
         });
-
     });
 });
