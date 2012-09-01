@@ -16,11 +16,9 @@ function letteval(node, obj) {
     if (('' + node).match(/^false$/)) return false;
     if (corelib[node]) return corelib[node];
 
-    var n = parseInt(n, 10);
+    var n = parseInt(node, 10);
     if (!isNaN(n)) return n;
-    // TODO: Add this back
-    //return null;
-    return node;
+    return null;
 }
 
 // Assign variables by % 2 factor, return [{name:...},{name:...}]
