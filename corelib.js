@@ -55,7 +55,6 @@ var corelib = {
         else return b;
     },
     g: function(o, n) {
-        console.log(o, n)
         return o[n];
     }
 };
