@@ -1,6 +1,7 @@
 var assert = require('assert');
 var lett = require('../lett.js');
 
+
 describe('builder', function() {
     describe('assignment', function() {
         it('should return 42 when its the last statement', function() {
@@ -104,8 +105,8 @@ describe('builder', function() {
         });
 
         it('should be able to execute directly after declaration', function() {
-            //  TODO: This fails!  - Why?
-            //  assert.equal(42, lett('<a b, +(a b)>(21 21)'));
+            assert.equal(42, lett('<a b, +(a b)>(21 21)'));
+            assert.equal(42, lett('<,42>()'));
         });
 
         it('should handle larger bodies', function() {
@@ -116,11 +117,6 @@ describe('builder', function() {
 
         it('should support nesting', function() {
             assert.equal(42, lett('f1 <,f2 <,42> f2()> f1()'));
-        });
-
-        it('should support being used as inline arguments', function() {
-            //  TODO: Fails
-            //  assert.equal(42, lett('f1 <a,a(42)> f1(<a,a>)'));
         });
     });
 
