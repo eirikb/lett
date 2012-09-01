@@ -27,7 +27,6 @@ function assignVars(vars, obj) {
 
     function push(v) {
         v = letteval(v, obj);
-        v.varname = varname;
         objs.push(v);
         obj[varname] = v;
         varname = null;
