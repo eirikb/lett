@@ -1,7 +1,6 @@
 var assert = require('assert');
 var lett = require('../lett.js');
 
-
 describe('builder', function() {
     describe('assignment', function() {
         it('should return 42 when its the last statement', function() {
@@ -127,5 +126,35 @@ describe('builder', function() {
             };
             assert.equal(42, lett('b', a));
         });
+    });
+
+    describe('object assignment', function() {
+        it('should not mess up numbers', function() {
+            var o = {};
+            lett('a 42', o);
+            assert.equal(42, o.a);
+        });
+
+        it('should not mess up strings', function() {
+            var o = {};
+            lett('a "42"', o);
+            assert.equal('42', o.a);
+        });
+
+        it('should not mess up null (unasigned)', function() {
+            var o = {};
+            lett('a', o);
+            assert.equal(null, o.a);
+        });
+
+        it('should not mess up calls', function() {
+            var o = {};
+            lett('a +(41 1)', o);
+            assert.equal(42, o.a);
+            lett('b [+(41 1)]',o);
+            assert.equal(42, o.a);
+            assert.equal(42, o.b);
+        });
+
     });
 });
