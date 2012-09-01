@@ -99,10 +99,6 @@ describe('builder', function() {
             assert.equal(42, lett('<a,a>')(42));
         });
 
-        it('should execute function calls within the function', function() {
-            assert.equal(42, lett('<a b, +(a b) >')(21, 21));
-        });
-
         it('should be able to execute directly after declaration', function() {
             assert.equal(42, lett('<a b, +(a b)>(21 21)'));
             assert.equal(42, lett('<,42>()'));
@@ -120,8 +116,7 @@ describe('builder', function() {
         });
 
         it('should support recursiveness', function() {
-            // TODO: Make work
-            //assert.equal(42, lett('<n,if(lt(n 100) 42 7)>(4)'));
+            assert.equal(42, lett('<n,if(lt(n 100) 42 7)>(4)'));
         });
     });
 
