@@ -2,10 +2,15 @@ var assert = require('assert');
 var lett = require('../lett.js');
 
 describe('corelib', function() {
-    describe('if statements', function() {
+    describe('conditionals', function() {
         it('should be evaluated correctly', function() {
             assert.equal(42, lett('if(true 42)'));
             assert.equal(42, lett('if(false 7 42)'));
+        });
+
+        // TODO: Make it call only correct call, need some hack here
+        it.skip('should not run all calls inside the conditional', function() {
+            assert.equal(42, lett('t <,t()> if(true 42 t())'));
         });
     });
 

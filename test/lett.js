@@ -2,11 +2,11 @@ var assert = require('assert');
 var lett = require('../lett.js');
 
 describe('lett', function() {
-    it('should support simple fibonacci', function() {
-        var src = 'fib <n, if(lt(n 2) n +(fib(-(n 1)) fib(-(n 2))))> fib(1)'
-
+    it.skip('should support simple fibonacci', function() {
+        //var src = 'fib <n, if(lt(n 2) n +(fib(-(n 1)) fib(-(n 2))))> fib(1)'
+        var src = 'test <n, if(lt(n 2) test(+(n 1)) n)> test(3)';
         //  TODO: Make work! :)
-        //  assert.equal(34, lett(src));
+        assert.equal(3, lett(src));
     });
 
     it('should support side effects', function() {

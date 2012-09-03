@@ -88,6 +88,18 @@ describe('builder', function() {
         it('should support directly on objects', function() {
             assert.equal(42, lett('a { b { c { d 42 }}}.b.c.d'));
         });
+
+        // TODO: Why does a().b return undefined here
+        it.skip('should support chaining of any return', function() {
+            var o = {
+                a: function() {
+                    return {
+                        b: 42
+                    }
+                }
+            };
+            assert.equal(42, lett('a().b', o));
+        });
     });
 
     describe('functions', function() {
