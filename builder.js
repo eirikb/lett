@@ -104,6 +104,7 @@ var handle = {
     chain: function(node, obj) {
         var name = node.parent[0];
         var val = obj[name];
+        if (typeof val === 'function') val = val();
         return (node[1]) ? letteval(node[1], val) : val[node[0]];
     },
 
