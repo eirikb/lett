@@ -8,8 +8,7 @@ describe('corelib', function() {
             assert.equal(42, lett('if(false 7 42)'));
         });
 
-        // TODO: Make it call only correct call, need some hack here
-        it.skip('should not run all calls inside the conditional', function() {
+        it('should not run all calls inside the conditional', function() {
             assert.equal(42, lett('t <,t()> if(true 42 t())'));
         });
     });

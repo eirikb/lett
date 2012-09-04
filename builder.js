@@ -63,21 +63,23 @@ var handle = {
         var fn = obj[node.call];
         if (!fn) fn = letteval(node.call, obj);
 
-        var args = node.map(function(n) {
-            return letteval(n, obj);
-        });
         var f = function(o) {
-                args = args.map(function(a) {
-                    if (o && o[a]) a = o[a];
-                    return a;
-                });
-                return fn.apply(null, args);
-            };
-        return f();
+            var args = node.map(function(n) {
+                return letteval(n, obj);
+            });
+            args = args.map(function(a) {
+                if (o && o[a]) a = o[a];
+                return a;
+            });
+            return fn.apply(null, args);
+        };
+        if (fn.crap) node.crap = true;
+        if (!node.parent.crap) return f()
+        else return f;
     },
 
     fn: function(node, obj) {
-        var vars = node.slice(0, -1);
+        var vars = node.slice(0, - 1);
         var body = node[node.length - 1];
 
         return function() {
@@ -112,3 +114,4 @@ var handle = {
         return assignVars(node, obj);
     }
 };
+
