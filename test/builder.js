@@ -99,6 +99,17 @@ describe('builder', function() {
             };
             assert.equal(42, lett('a().b', o));
         });
+
+        // TODO: Find out why it scrwes the 'host' object up
+        it.skip('should not screw up the original object', function() {
+            var o = {
+                a: {
+                    b: 42
+                }
+            };
+            assert.equal(42, lett('a.b', o));
+            assert.equal(42, lett('a.b', o));
+        });
     });
 
     describe('functions', function() {
