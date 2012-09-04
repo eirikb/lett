@@ -13,7 +13,7 @@ function letteval(node, obj) {
     }
     if (obj[node]) return obj[node];
     if (('' + node).match(/^true$/i)) return true;
-    if (('' + node).match(/^false$/)) return false;
+    if (('' + node).match(/^false$/i)) return false;
     if (corelib[node]) return corelib[node];
 
     var n = parseInt(node, 10);
