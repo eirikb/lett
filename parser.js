@@ -40,7 +40,6 @@ function buildTree(code) {
     var current = root;
 
     var type;
-    var chain;
     while (type = searchType(code)) {
         if (type.index === 0) {
             var tmp = [];
@@ -61,13 +60,6 @@ function buildTree(code) {
             type.index++;
         } else {
             current.push(code.slice(0, type.index));
-        }
-
-        if (current.name === 'chain' && ! chain) {
-            chain = current;
-        } else if (chain && type.name !== 'chain') {
-            current = chain.parent;
-            chain = false;
         }
 
         code = code.slice(type.index).trim();
