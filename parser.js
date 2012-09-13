@@ -3,7 +3,6 @@ exports.parse = function(code) {
     var tree = buildTree(code).filter(function(branch) {
         return branch;
     });
-    tree = remapCall(tree);
     return tree;
 };
 
@@ -53,6 +52,10 @@ function buildTree(code) {
             } else if (type.name === 'end') {
                 current = current.parent;
                 if (current.name === 'fn') current = current.parent;
+            } else if (type.name === 'call') {
+                var i = current.length - 1;
+                tmp.call = current[i];
+                current = current[i] = tmp;
             } else {
                 current.push(tmp);
                 current = tmp;
@@ -67,17 +70,3 @@ function buildTree(code) {
     current.push(code.trim());
     return root;
 }
-
-// Call bodies are by default positions after a call
-function remapCall(tree) {
-    var i;
-    for (i = 0; i < tree.length; i++) {
-        if (Array.isArray(tree[i])) tree[i] = remapCall(tree[i]);
-        if (tree[i].name === 'call' && i > 0) {
-            tree[i].call = tree[i - 1];
-            tree.splice(i - 1, 1);
-        }
-    }
-    return tree;
-}
-
