@@ -79,7 +79,15 @@ describe('lett', function() {
         });
 
         it('should handle calls on calls on calls', function() {
-            var o = {a:function() { return function() { return function() { return 42;}}}};
+            var o = {
+                a: function() {
+                    return function() {
+                        return function() {
+                            return 42;
+                        }
+                    }
+                }
+            };
             assert.equal(42, lett('a()()()', o));
 
         });
@@ -185,10 +193,14 @@ describe('lett', function() {
         });
     });
 
+    it('should support recursion', function() {
+        var src = 'test <n, if(lt(n 10) test(+(n 1)) n)> test(1)';
+        assert.equal(10, lett(src));
+    });
+
+    //  TODO: Make work! :)
     it.skip('should support simple fibonacci', function() {
-        //var src = 'fib <n, if(lt(n 2) n +(fib(-(n 1)) fib(-(n 2))))> fib(1)'
-        var src = 'test <n, if(lt(n 2) test(+(n 1)) n)> test(3)';
-        //  TODO: Make work! :)
+        var src = 'fib <n, if(lt(n 2) n +(fib(-(n 1)) fib(-(n 2))))> fib(7)'
         assert.equal(3, lett(src));
     });
 

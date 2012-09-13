@@ -51,6 +51,7 @@ var corelib = {
         return a === b;
     },
     if: function(con, a, b) {
+        if (typeof con === 'function') con = con();
         var ret = b;
         if (con) ret = a;
         if (typeof ret === 'function') return ret();
