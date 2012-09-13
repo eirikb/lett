@@ -52,9 +52,9 @@ function buildTree(code) {
             } else if (type.name === 'end') {
                 current = current.parent;
                 if (current.name === 'fn') current = current.parent;
-            } else if (type.name === 'call') {
+            } else if (type.name === 'call' || type.name === 'chain') {
                 var i = current.length - 1;
-                tmp.call = current[i];
+                tmp[type.name] = current[i];
                 current = current[i] = tmp;
             } else {
                 current.push(tmp);

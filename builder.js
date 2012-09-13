@@ -64,22 +64,22 @@ var handle = {
         if (!fn) fn = letteval(node.call, obj);
 
         var f = function(o) {
-            var args = node.map(function(n) {
-                return letteval(n, obj);
-            });
-            args = args.map(function(a) {
-                if (o && o[a]) a = o[a];
-                return a;
-            });
-            return fn.apply(null, args);
-        };
+                var args = node.map(function(n) {
+                    return letteval(n, obj);
+                });
+                args = args.map(function(a) {
+                    if (o && o[a]) a = o[a];
+                    return a;
+                });
+                return fn.apply(null, args);
+            };
         if (fn.crap) node.crap = true;
-        if (!node.parent.crap) return f()
+        if (!node.parent.crap) return f();
         else return f;
     },
 
     fn: function(node, obj) {
-        var vars = node.slice(0, - 1);
+        var vars = node.slice(0, -1);
         var body = node[node.length - 1];
 
         return function() {
@@ -104,14 +104,11 @@ var handle = {
     },
 
     chain: function(node, obj) {
-        var name = node.parent[0];
-        var val = obj[name];
-        if (typeof val === 'function') val = val();
-        return (node[1]) ? letteval(node[1], val) : val[node[0]];
+        var val = letteval(node.chain, obj);
+        return (node[0]) ? letteval(node[0], val) : val;
     },
 
     fnbody: function(node, obj) {
         return assignVars(node, obj);
     }
 };
-

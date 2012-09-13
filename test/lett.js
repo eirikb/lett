@@ -95,8 +95,7 @@ describe('lett', function() {
             assert.equal(42, lett('a { b { c { d 42 }}}.b.c.d'));
         });
 
-        // TODO: Chaining is not working properly
-        it.skip('should support chaining of any return', function() {
+        it('should support chaining of any return', function() {
             var o = {
                 a: function() {
                     return {
@@ -107,8 +106,7 @@ describe('lett', function() {
             assert.equal(42, lett('a().b', o));
         });
 
-        // TODO: Find out why it scrwes the 'host' object up
-        it.skip('should not screw up the original object', function() {
+        it('should not screw up the original object', function() {
             var o = {
                 a: {
                     b: 42
