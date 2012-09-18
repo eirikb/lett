@@ -54,5 +54,9 @@ describe('corelib', function() {
             };
             assert.equal(42, lett('g(a "b")', o));
         });
+
+        it.skip('should support floats', function() {
+            assert.equal(42.1337, lett('.(42 1337)'));
+        });
     });
 });
