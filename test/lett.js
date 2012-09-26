@@ -58,6 +58,10 @@ describe('lett', function() {
             assert.equal("test", res[3].a.b);
             assert.equal(7, res[res.length - 1]);
         });
+
+        it.skip('should support array prototypes', function() {
+            assert.equal(3, lett('[1 1 1].map(<,>)').length);
+        });
     });
 
     describe('calls', function() {
@@ -89,7 +93,6 @@ describe('lett', function() {
                 }
             };
             assert.equal(42, lett('a()()()', o));
-
         });
     });
 
