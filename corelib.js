@@ -59,6 +59,18 @@ var corelib = {
     },
     g: function(o, n) {
         return o[n];
+    },
+    for: function(from, to, cb) {
+        if (arguments.length === 2) {
+            cb = to;
+            to = from;
+            from = 0;
+        }
+        var ret = [];
+        for (var i = from; i < to; i++) {
+            ret.push(cb(i));
+        }
+        return ret;
     }
 };
 
