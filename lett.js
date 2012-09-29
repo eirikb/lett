@@ -13,7 +13,7 @@ function letteval(node, obj) {
         var a = handle[node.name](node, obj);
         return a;
     }
-    if (obj[node]) return obj[node];
+    if (typeof obj[node] !== 'undefined') return obj[node];
     if (('' + node).match(/^true$/i)) return true;
     if (('' + node).match(/^false$/i)) return false;
     if (corelib[node]) return corelib[node];
@@ -75,6 +75,7 @@ var handle = {
                 });
                 return fn.apply(null, args);
             };
+            if (!fn) return null;
         if (fn.crap) node.crap = true;
         if (!node.parent.crap) return f();
         else return f;
@@ -89,9 +90,8 @@ var handle = {
             vars.forEach(function(v, i) {
                 obj[v] = a[i];
             });
-
-            body = letteval(body, obj);
-            return body[body.length - 1];
+            var body2 = letteval(body, obj);
+            return body2[body2.length - 1];
         };
     },
 
