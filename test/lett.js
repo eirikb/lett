@@ -59,7 +59,7 @@ describe('lett', function() {
             assert.equal(7, res[res.length - 1]);
         });
 
-        it.skip('should support array prototypes', function() {
+        it('should support array prototypes', function() {
             assert.equal(3, lett('[1 1 1].map(<,>)').length);
         });
     });

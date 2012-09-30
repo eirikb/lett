@@ -73,7 +73,7 @@ var handle = {
                     if (o && o[a]) a = o[a];
                     return a;
                 });
-                return fn.apply(null, args);
+                return fn.apply(obj, args);
             };
             if (!fn) return null;
         if (fn.crap) node.crap = true;
