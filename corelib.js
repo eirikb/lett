@@ -71,6 +71,9 @@ var corelib = {
             ret.push(cb(i));
         }
         return ret;
+    },
+    'f': function(a, b) {
+        return parseFloat(a + '.' + b);
     }
 };
 
