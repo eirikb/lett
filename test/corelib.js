@@ -65,5 +65,9 @@ describe('corelib', function() {
             assert.equal(42, lett('for(43 <i,i>)')[42]);
             assert.equal(42, lett('for(0 43 <i,i>)')[42]);
         });
+
+        it.skip('should support a ! (not) operatorish', function()  {
+            assert.equal(false, lett('not(true)'));
+        });
     });
 });
