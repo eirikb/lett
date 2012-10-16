@@ -161,6 +161,13 @@ describe('lett', function() {
             assert.equal(3, lett('<,args.length>()'));
             assert.equal(true, Array.isArray(lett('<,args>()')));
         });
+
+        it.skip('should support built in array functions correctly', function() {
+            var res = lett('[1 2 3].map(<i,+(i 1)>)');
+            assert.equal(2, res[0]);
+            assert.equal(3, res[1]);
+            assert.equal(4, res[2]);
+        });
     });
 
     describe('object paramters', function() {
