@@ -24,6 +24,12 @@ describe('lett', function() {
         it('should support incrementing', function() {
             assert.equal(42, lett('kaffe 41 kaffe +(kaffe 1) kaffe'));
         });
+
+        it('should not disturbe the sent in object in special cases', function() {
+            var a = {hello: 'world'};
+            lett('"hack" split()', a);
+            assert.equal('world', a.hello);
+        });
     });
 
     describe('objects', function() {
