@@ -26,7 +26,9 @@ describe('lett', function() {
         });
 
         it('should not disturbe the sent in object in special cases', function() {
-            var a = {hello: 'world'};
+            var a = {
+                hello: 'world'
+            };
             lett('"hack" split()', a);
             assert.equal('world', a.hello);
         });
@@ -163,8 +165,8 @@ describe('lett', function() {
             assert.equal(42, lett('<n,if(lt(n 100) 42 7)>(4)'));
         });
 
-        it.skip('should have an internal array called "args" for arguments', function() {
-            assert.equal(3, lett('<,args.length>()'));
+        it('should have an internal array called "args" for arguments', function() {
+            assert.equal(3, lett('<,args>(1 1 1)').length);
             assert.equal(true, Array.isArray(lett('<,args>()')));
         });
 
