@@ -1,5 +1,5 @@
 var assert = require('assert');
-var lett = require('../lett.js');
+var lett = require('../src/lett.js');
 
 describe('lett', function() {
     describe('assignment', function() {

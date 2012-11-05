@@ -1,5 +1,5 @@
 var assert = require('assert');
-var parser = require('../parser.js');
+var parser = require('../src/parser.js');
 
 describe('parser', function() {
     it('should not halt on errorous strings', function(done) {
