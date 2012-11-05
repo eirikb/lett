@@ -13,13 +13,13 @@ function letteval(node, obj) {
         var a = handle[node.name](node, obj);
         return a;
     }
+    var n = parseInt(node, 10);
+    if (!isNaN(n)) return n;
+
     if (typeof obj[node] !== 'undefined') return obj[node];
     if (('' + node).match(/^true$/i)) return true;
     if (('' + node).match(/^false$/i)) return false;
     if (corelib[node]) return corelib[node];
-
-    var n = parseInt(node, 10);
-    if (!isNaN(n)) return n;
     return null;
 }
 
