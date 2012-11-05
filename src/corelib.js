@@ -50,7 +50,7 @@ var corelib = {
     eq: function(a, b) {
         return a === b;
     },
-    if: function(con, a, b) {
+    'if': function(con, a, b) {
         if (typeof con === 'function') con = con();
         var ret = b;
         if (con) ret = a;
@@ -60,7 +60,7 @@ var corelib = {
     g: function(o, n) {
         return o[n];
     },
-    for: function(from, to, cb) {
+    'for': function(from, to, cb) {
         if (arguments.length === 2) {
             cb = to;
             to = from;
@@ -84,5 +84,5 @@ Object.keys(corelib).forEach(function(key) {
     exports[key] = corelib[key];
 });
 
-exports.if.crap = true;
+exports['if'].crap = true;
 

@@ -75,7 +75,7 @@ var handle = {
                 });
                 return fn.apply(obj, args);
             };
-            if (!fn) return null;
+        if (!fn) return null;
         if (fn.crap) node.crap = true;
         if (!node.parent.crap) return f();
         else return f;
