@@ -72,8 +72,11 @@ var corelib = {
         }
         return ret;
     },
-    'f': function(a, b) {
+    f: function(a, b) {
         return parseFloat(a + '.' + b);
+    },
+    not: function(cond) {
+        return !cond;
     }
 };
 
