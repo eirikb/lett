@@ -2,11 +2,13 @@
     "name": "lett",
     "description": "lett is Not a Language",
     "author": "Eirik Brandtzæg <eirikb@eirikb.no>",
-    "main": "lett.js",
-    "version": "0.0.6",
+    "main": "src/lett.js",
+    "version": "0.0.7",
     "repository": {
-        "type": "git", 
+        "type": "git",
         "url": "https://github.com/eirikb/lett"
+    },
+    "devDependencies": {
+        "mocha": "*"
     }
 }
-
