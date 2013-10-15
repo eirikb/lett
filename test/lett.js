@@ -241,4 +241,9 @@ describe('lett', function() {
         assert.equal(42, lett('a', o));
         assert.equal(42, o.a);
     });
+
+    it.skip('should support arrays in arrays', function() {
+      var res = lett("[[1 2].map(<i,i>) 1]");
+      assert.equal([[1, 2], 1], res);
+    });
 });
