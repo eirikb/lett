@@ -253,4 +253,9 @@ describe('lett', function() {
     var res = lett("x ['a'].join('') str(x 'b')");
     assert.equal('a b', res);
   });
+
+  it.skip('should print a b', function() {
+    var res = lett("x ['a'].join('') str(x 'b')");
+    assert.equal('a b', res);
+  });
 });
